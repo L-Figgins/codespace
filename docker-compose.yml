@@ -1,0 +1,13 @@
+version: "3"
+services:
+  client:
+    image: lfiggins/codespace-client-dev
+    mem_limit: 128m
+    hostname: client
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./client
+    volumes:
+      - /home/node/app/node_modules
+      - ./client:/home/node/app
+    
