@@ -7,5 +7,5 @@ COPY Pipfile Pipfile.lock ./
 RUN pipenv install --system --deploy
 
 COPY . .
-RUN pipenv install --editable ./server
+RUN pipenv install --editable ./codespace_backend
 CMD ["python3", "-m", "flask", "--app", "codespace_backend", "--debug", "run", "--host=0.0.0.0"]
