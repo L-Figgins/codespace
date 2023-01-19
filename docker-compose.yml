@@ -1,6 +1,8 @@
 version: "3"
 services:
   client:
+    #if image name and build are provided, the name will be the tag of the image
+    #created when running docker compose up --build
     image: lfiggins/codespace-client-dev
     mem_limit: 128m
     hostname: client
@@ -10,6 +12,41 @@ services:
     volumes:
       - /home/node/app/node_modules
       - ./client:/home/node/app
+    # ports:
+    #   - "3000:3000"
+  redis:
+    image: redis/redis-stack:latest
+    environment:
+      - REDIS_ARGS=--requirepass devpassword --save 120 1 --loglevel warning
     ports:
-      - "3000:3000"
-    
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - /local-redis-data:/data
+  api:
+    image: lfiggins/codespace-backend-dev
+    hostname: api
+    build: 
+      dockerfile: Dockerfile.dev
+      context: ./api
+    volumes:
+      - /usr/src/app/codespace_backend/__pycache__/
+      - ./api/codespace_backend:/usr/src/app/codespace_backend
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PW=devpassword
+      - PYTHONUNBUFFERED=1
+    depends_on: 
+     - redis
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    image: lfiggins/codespace-nginx-dev
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
+    ports:
+     - "8080:80"

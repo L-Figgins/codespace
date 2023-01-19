@@ -104,6 +104,7 @@ const API = {
    */
   getArticles() {
     //pass
+    return [];
   },
 
   /**
