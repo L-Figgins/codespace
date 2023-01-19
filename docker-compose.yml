@@ -31,7 +31,7 @@ services:
       context: ./api
     volumes:
       - /usr/src/app/codespace_backend/__pycache__/
-      - ./
+      - ./api/codespace_backend:/usr/src/app/codespace_backend
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379
@@ -39,3 +39,5 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on: 
      - redis
+    ports: 
+      - "5000:5000"
