@@ -126,4 +126,4 @@ const API = {
   async getArticle(id) {},
 };
 
-// payload  object {}}
+export default API;
