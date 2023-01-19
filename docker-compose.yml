@@ -1,6 +1,8 @@
 version: "3"
 services:
   client:
+    #if image name and build are provided, the name will be the tag of the image
+    #created when running docker compose up --build
     image: lfiggins/codespace-client-dev
     mem_limit: 128m
     hostname: client
@@ -12,4 +14,13 @@ services:
       - ./client:/home/node/app
     ports:
       - "3000:3000"
+  redis:
+    image: redis/redis-stack:latest
+    environment:
+      - REDIS_ARGS=--requirepass devpassword --save 120 1 --loglevel warning
+    ports:
+      - "6379:6379"
+      - "8001:8001"
+    volumes:
+      - /local-redis-data:/data
     
