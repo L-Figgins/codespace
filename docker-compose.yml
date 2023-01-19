@@ -23,4 +23,19 @@ services:
       - "8001:8001"
     volumes:
       - /local-redis-data:/data
-    
+  api:
+    image: lfiggins/codespace-backend-dev
+    hostname: api
+    build: 
+      dockerfile: Dockerfile.dev
+      context: ./api
+    volumes:
+      - /usr/src/app/codespace_backend/__pycache__/
+      - ./
+    environment:
+      - REDIS_HOST=redis
+      - REDIS_PORT=6379
+      - REDIS_PW=devpassword
+      - PYTHONUNBUFFERED=1
+    depends_on: 
+     - redis
