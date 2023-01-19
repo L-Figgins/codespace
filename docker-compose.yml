@@ -12,8 +12,8 @@ services:
     volumes:
       - /home/node/app/node_modules
       - ./client:/home/node/app
-    ports:
-      - "3000:3000"
+    # ports:
+    #   - "3000:3000"
   redis:
     image: redis/redis-stack:latest
     environment:
@@ -39,5 +39,12 @@ services:
       - PYTHONUNBUFFERED=1
     depends_on: 
      - redis
-    ports: 
-      - "5000:5000"
+  nginx:
+    depends_on:
+      - api
+      - client
+    restart: always
+    image: lfiggins/codespace-nginx-dev
+    build:
+      dockerfile: Dockerfile.dev
+      context: ./nginx
