@@ -2,7 +2,7 @@ from flask import current_app as app
 from flask import request, jsonify
 
 from flask_json_schema import JsonSchema,  JsonValidationError
-from request_schema import register_schema
+from .request_schema import register_schema
 # from .db import get_db
 from .util import get_utc_timestamp
 
@@ -30,7 +30,7 @@ def get_articles():
 
 
 @app.route("/auth/register", methods=["POST"])
-@schema.validate(register_schema)
+# @schema.validate(register_schema)
 def register_admin_user():
     request_data = request.get_json()
     return {"payload": request_data}, 200
