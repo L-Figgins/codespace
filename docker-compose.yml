@@ -32,6 +32,8 @@ services:
     volumes:
       - /usr/src/app/codespace_backend/__pycache__/
       - ./api/codespace_backend:/usr/src/app/codespace_backend
+      - ./api/tests/:/usr/src/app/tests
+      - /user/src/app/tests/__pycache__/
     environment:
       - REDIS_HOST=redis
       - REDIS_PORT=6379

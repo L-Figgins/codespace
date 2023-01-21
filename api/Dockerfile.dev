@@ -4,8 +4,8 @@ RUN pip install pipenv
 WORKDIR /usr/src/app
 
 COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy
+RUN pipenv install --dev --system --deploy
 
 COPY . .
-RUN pipenv install --editable ./codespace_backend
+RUN pipenv install --dev --editable ./codespace_backend
 CMD ["python3", "-m", "flask", "--app", "codespace_backend", "--debug", "run", "--host=0.0.0.0", "-p","5000"]
