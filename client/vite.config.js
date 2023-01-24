@@ -13,4 +13,9 @@ export default defineConfig({
     port: 3000,
     strictPort: true,
   },
+  test: {
+    globals: true,
+    environment: "happy-dom",
+    includeSource: ["src/**/*.{spec,test}.{js,ts}"],
+  },
 });
