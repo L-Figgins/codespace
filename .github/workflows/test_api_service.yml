@@ -1,4 +1,4 @@
-name: Test Api Service
+name: Run Api Unit Tests
 on:
   pull_request:
     branches:
