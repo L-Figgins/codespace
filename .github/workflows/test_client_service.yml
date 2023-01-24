@@ -1,0 +1,16 @@
+name: Run Client Tests
+on:
+  pull_request:
+    branches:
+      - main
+    paths:
+      - client/**
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Build Test image
+        run: docker build -t lfiggins/codespace-client-test -f ./client/Dockerfile.dev ./client
+      - name: Run Tests
+        run: docker run lfiggins/codespace-client-test npm run test -- --run

@@ -1,5 +1,6 @@
 from datetime import timezone
 import datetime
+import uuid
   
 def get_utc_timestamp()-> int:
  
@@ -11,3 +12,10 @@ def get_utc_timestamp()-> int:
     utc_timestamp = utc_time.timestamp()
     
     return int(round(utc_timestamp))
+
+def generate_user_id()-> str:
+    """
+    Generate a random UUID using uuid4
+    """
+    return uuid.uuid4()
+

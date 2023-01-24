@@ -1,4 +1,4 @@
-const PREFIX = "api";
+import axios from "axios";
 
 /**
  * @typedef ContactInfo
@@ -42,6 +42,7 @@ const PREFIX = "api";
  */
 
 const API = {
+  PREFIX: "api",
   /**
    * Route /<prefix>/user
    * Method GET admin user if they exist
@@ -55,7 +56,10 @@ const API = {
    * @param {User} user - user info object
    * @return {Promise<object>} - success or payload
    */
-  async createAdminUser(user) {},
+  async createAdminUser(user) {
+    const endpoint = `${API.PREFIX}/auth/register`;
+    return axios.post(endpoint, user);
+  },
 
   /**
    * Route /<prefix>/admin/image
@@ -126,5 +130,7 @@ const API = {
    * */
   async getArticle(id) {},
 };
+
+window.API = API;
 
 export default API;

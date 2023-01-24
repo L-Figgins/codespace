@@ -1,9 +1,17 @@
 from flask import current_app as app
-from flask import request
-from .db import get_db
+from flask import request, jsonify
+
+from flask_json_schema import JsonSchema,  JsonValidationError
+from .request_schema import register_schema
+# from .db import get_db
 from .util import get_utc_timestamp
 
+schema = JsonSchema()
 
+@app.errorhandler(JsonValidationError)
+def validation_error(e):
+    return jsonify({'error': e.message, 'errors': [validation_error.message for validation_error  in e.errors]})
+    
 
 @app.route("/articles", methods=["GET"])
 def get_articles():
@@ -19,3 +27,10 @@ def get_articles():
     results = [{"title": "Title Stub", "description": ip_sum, "date": now}]
 
     return {"payload": results}, 200
+
+
+@app.route("/auth/register", methods=["POST"])
+# @schema.validate(register_schema)
+def register_admin_user():
+    request_data = request.get_json()
+    return {"payload": request_data}, 200
