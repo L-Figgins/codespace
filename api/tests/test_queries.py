@@ -170,4 +170,5 @@ def test_serialize(mock_user, serialized_user, mock_user_id):
 
 def test_deserialize(mock_user, serialized_user, mock_user_id):
     mock_user["id"] = mock_user_id
+    mock_user.pop("password")
     assert mock_user == deserialize(serialized_user)

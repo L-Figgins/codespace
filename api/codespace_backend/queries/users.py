@@ -60,12 +60,14 @@ def serialize(user: dict, user_id: str) -> dict:
 def deserialize(data: dict) -> dict:
     # more to be added later
     CONTACT_INFO_KEYS = {"email"}
+    EXCLUDE_KEYS = {"password"}
     result = {"contactInfo": {}}
 
     for k, v in data.items():
         if k in CONTACT_INFO_KEYS:
             result["contactInfo"][k] = v
             continue
-        result[k] = v
+        if k not in EXCLUDE_KEYS:
+            result[k] = v
 
     return result
