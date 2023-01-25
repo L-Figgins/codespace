@@ -10,7 +10,6 @@ services:
       dockerfile: Dockerfile.dev
       context: ./client
     volumes:
-      - /home/node/app/node_modules
       - ./client:/home/node/app
     # ports:
     #   - "3000:3000"
