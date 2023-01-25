@@ -15,7 +15,7 @@ def create_user(user: dict):
     :raises ValueError: if the provided username is already taken
     """
 
-    def create_user_txn(pipe):
+    def create_user_txn(pipe) -> str:
         exists = pipe.sismember(usernames_unique_key(), user["username"])
         if exists:
             raise ValueError("Username is taken")
