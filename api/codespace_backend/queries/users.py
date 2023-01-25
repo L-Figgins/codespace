@@ -22,10 +22,11 @@ def create_user(user: dict):
 
         pipe.multi()
         user_id = generate_user_id()
+        username = user["username"]
         # user id is defined in the other function since redis.py transactions do not allow for
-        pipe.hset(users_key(user_id), serialize(user))
+        pipe.hset(users_key(user_id), mapping=serialize(user, user_id))
         pipe.sadd(usernames_unique_key(), user["username"])
-        pipe.zadd(usernames_key(), {user["username"]: user_id})
+        pipe.set(usernames_key(username), user_id)
         return user_id
 
     # r = redis
@@ -37,7 +38,7 @@ def create_user(user: dict):
     return user_id
 
 
-def serialize(user: dict) -> dict:
+def serialize(user: dict, user_id: str) -> dict:
     """
     Serializes the user information into a dictionary of specific fields.
 
@@ -46,6 +47,7 @@ def serialize(user: dict) -> dict:
 
     """
     hash = {
+        "id": user_id,
         "username": user["username"],
         "name": user["name"],
         "password": user["password"],
@@ -53,3 +55,17 @@ def serialize(user: dict) -> dict:
     }
 
     return hash
+
+
+def deserialize(data: dict) -> dict:
+    # more to be added later
+    CONTACT_INFO_KEYS = {"email"}
+    result = {"contactInfo": {}}
+
+    for k, v in data.items():
+        if k in CONTACT_INFO_KEYS:
+            result["contactInfo"][k] = v
+            continue
+        result[k] = v
+
+    return result

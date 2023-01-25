@@ -1,4 +1,5 @@
-#redis keys
+# redis keys
+
 
 def usernames_unique_key() -> str:
     """
@@ -6,15 +7,17 @@ def usernames_unique_key() -> str:
     """
     return "usernames:unique"
 
-def users_key(user_id:str) -> str:
+
+def users_key(user_id: str) -> str:
     """
     redis hash key containing all user information
     :param user_id: user id
     """
     return f"users#{user_id}"
 
-def usernames_key() -> str:
+
+def usernames_key(name) -> str:
     """
     redis usersnames sorted set key. The score is the user id.
     """
-    return "usernames"
+    return f"usernames#{name}"
