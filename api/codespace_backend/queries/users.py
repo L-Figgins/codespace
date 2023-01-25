@@ -38,6 +38,16 @@ def create_user(user: dict):
     return user_id
 
 
+def get_user_by_username(username: str) -> dict:
+    r = get_db()
+    uid = r.get(usernames_key(username))
+
+    if uid == None:
+        raise KeyError("User does not exist")
+
+    return deserialize(r.hgetall(users_key(uid)))
+
+
 def serialize(user: dict, user_id: str) -> dict:
     """
     Serializes the user information into a dictionary of specific fields.
