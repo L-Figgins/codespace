@@ -1,22 +1,29 @@
 from flask import current_app as app
 from flask import request, jsonify
 
-from flask_json_schema import JsonSchema,  JsonValidationError
+from flask_json_schema import JsonSchema, JsonValidationError
 from .request_schema import register_schema
+
 # from .db import get_db
 from .util import get_utc_timestamp
 
 schema = JsonSchema()
 
+
 @app.errorhandler(JsonValidationError)
 def validation_error(e):
-    return jsonify({'error': e.message, 'errors': [validation_error.message for validation_error  in e.errors]})
-    
+    return jsonify(
+        {
+            "error": e.message,
+            "errors": [validation_error.message for validation_error in e.errors],
+        }
+    )
+
 
 @app.route("/articles", methods=["GET"])
 def get_articles():
     # db = get_db()
-    #stub api
+    # stub api
     now = get_utc_timestamp()
     ip_sum = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt\
             ut labore et dolore magna aliqua. Ut enim ad minim veniam,\
