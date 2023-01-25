@@ -10,27 +10,29 @@ def create_user(user: dict):
 
     :param user: A dictionary containing the user's information, including
                  'username', 'name', 'password', and 'contactInfo'
-    :return: A string representing the user's unique ID
+    :return: A string representing the user's unique ID generated with uiid4
 
     :raises ValueError: if the provided username is already taken
     """
 
+    def create_user_txn(pipe):
+        exists = pipe.sismember(usernames_unique_key(), user["username"])
+        if exists:
+            raise ValueError("Username is taken")
+
+        pipe.multi()
+        user_id = generate_user_id()
+        # user id is defined in the other function since redis.py transactions do not allow for
+        pipe.hset(users_key(user_id), serialize(user))
+        pipe.sadd(usernames_unique_key(), user["username"])
+        pipe.zadd(usernames_key(), {user["username"]: user_id})
+        return user_id
+
     # r = redis
     r = get_db()
-
-    user_id = generate_user_id()
-
-    exists = r.sismember(usernames_unique_key(), user["username"])
-
-    if exists:
-        raise ValueError("Username is taken")
-
-    pipe = r.pipeline()
-    pipe.hset(users_key(user_id), serialize(user))
-    pipe.sadd(usernames_unique_key(), user["username"])
-    pipe.zadd(usernames_key(), {user["username"]: user_id})
-
-    _ = pipe.execute()
+    user_id = r.transaction(
+        create_user_txn, usernames_unique_key(), value_from_callable=True
+    )
 
     return user_id
 

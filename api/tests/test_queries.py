@@ -28,14 +28,27 @@ def mock_user_id():
     yield uid
 
 
+@pytest.mark.dev
 def test_create_user_success(mocker, mock_r, mock_pipe, mock_user_id):
     mock_r.sismember.return_value = False
+    mock_pipe.sismember.return_value = False
     # Patch the get_db function to return the mock redis object
     mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
     # Patch the generate_user_id function to return a fixed value
     mocker.patch(
         "codespace_backend.queries.users.generate_user_id", return_value=mock_user_id
     )
+
+    mock_r.transaction.return_value = mock_user_id
+
+    def side_effect(func, *args, **kwargs):
+        # call arg provided from fist call
+        print(func)
+        val = func(mock_pipe)
+        print(val)
+        return func(mock_pipe)
+
+    mock_r.transaction.side_effect = side_effect
 
     user = {
         "username": "mock_username",
@@ -47,14 +60,16 @@ def test_create_user_success(mocker, mock_r, mock_pipe, mock_user_id):
     user_id = create_user(user)
 
     # assert is Member is called with correct args
-    mock_r.sismember.assert_called_with(usernames_unique_key(), user["username"])
+    mock_r.transaction.assert_called_with(
+        mocker.ANY, usernames_unique_key(), value_from_callable=True
+    )
 
     # Assert that the hset, sadd, and zadd methods were called on the pipeline object
     mock_pipe.hset.assert_called_with(users_key(mock_user_id), serialize(user))
     mock_pipe.sadd.assert_called_with(usernames_unique_key(), "mock_username")
     mock_pipe.zadd.assert_called_with(usernames_key(), {"mock_username": mock_user_id})
     # Assert that the execute method was called on the pipeline object
-    mock_pipe.execute.assert_called()
+    mock_pipe.multi.assert_called()
     # Assert that the returned user_id is the expected value
     assert user_id == mock_user_id
 
