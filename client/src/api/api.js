@@ -58,6 +58,9 @@ const API = {
    */
   async createAdminUser(user) {
     const endpoint = `${API.PREFIX}/auth/register`;
+    if (!user || !user.username || !user.password) {
+      throw new TypeError("No Username or Password Provided. Invalid User.");
+    }
     return axios.post(endpoint, user);
   },
 
