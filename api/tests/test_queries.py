@@ -28,7 +28,6 @@ def mock_user_id():
     yield uid
 
 
-@pytest.mark.dev
 def test_create_user_success(mocker, mock_r, mock_pipe, mock_user_id):
     mock_r.sismember.return_value = False
     mock_pipe.sismember.return_value = False
