@@ -9,10 +9,12 @@ def get_db():
         g.db = redis.Redis(
             host=getenv("REDIS_HOST", ""),
             port=getenv("REDIS_PORT", "6379"),
-            password=getenv("REDIS_PW", "devpassword")
+            password=getenv("REDIS_PW", "devpassword"),
+            decode_responses=True,
         )
 
     return g.db
+
 
 def close_db(e=None):
     db = g.pop("db", None)
@@ -20,8 +22,10 @@ def close_db(e=None):
     if db is not None:
         db.close()
 
+
 def init_con():
     db = get_db
+
 
 def init_app(app):
     app.teardown_appcontext(close_db)
