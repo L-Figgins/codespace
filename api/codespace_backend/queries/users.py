@@ -39,6 +39,13 @@ def create_user(user: dict):
 
 
 def get_user_by_username(username: str) -> dict:
+    """
+    Retrieve a user's information from the database by their username.
+
+    :param username: The username of the user to retrieve.
+    :return: A dictionary containing the user's information.
+    :raises KeyError: If the user does not exist in the database.
+    """
     r = get_db()
     uid = r.get(usernames_key(username))
 
