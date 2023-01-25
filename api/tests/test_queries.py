@@ -42,9 +42,6 @@ def test_create_user_success(mocker, mock_r, mock_pipe, mock_user_id):
 
     def side_effect(func, *args, **kwargs):
         # call arg provided from fist call
-        print(func)
-        val = func(mock_pipe)
-        print(val)
         return func(mock_pipe)
 
     mock_r.transaction.side_effect = side_effect
@@ -80,8 +77,14 @@ def test_create_user_username_taken(mocker, mock_r, mock_pipe, mock_user_id):
     mocker.patch(
         "codespace_backend.queries.users.generate_user_id", return_value=mock_user_id
     )
+
+    def side_effect(func, *args, **kwargs):
+        # call arg provided from fist call
+        return func(mock_pipe)
+
+    mock_r.transaction.side_effect = side_effect
     # Set the sismember return value to True, indicating that the username is taken
-    mock_r.sismember.return_value = True
+    mock_pipe.sismember.return_value = True
 
     user = {
         "username": "mock_username",
