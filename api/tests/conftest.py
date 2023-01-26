@@ -30,7 +30,12 @@ def mock_redis(mocker, mock_pipe):
     yield mock_r
 
 
-@pytest.fixture(name="mock_user_id")
-def mock_user_id():
+@pytest.fixture(name="mock_uuid")
+def mock_uuid():
     uid = "cce8594a-0e36-467d-9dd3-efe9c8376c94"
     yield uid
+
+
+@pytest.fixture(name="mock_created_at")
+def mock_created_at_ts():
+    return 1674702339

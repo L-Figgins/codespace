@@ -1,5 +1,4 @@
 import pytest
-import redis
 from os import getenv
 from codespace_backend.queries.users import (
     create_user,
@@ -52,16 +51,16 @@ def mock_user():
 #     yield mock_r
 
 
-# @pytest.fixture(name="mock_user_id")
-# def mock_user_id():
+# @pytest.fixture(name="mock_uuid")
+# def mock_uuid():
 #     uid = "cce8594a-0e36-467d-9dd3-efe9c8376c94"
 #     yield uid
 
 
 @pytest.fixture()
-def serialized_user(mock_user_id):
+def serialized_user(mock_uuid):
     expected_output = {
-        "id": mock_user_id,
+        "id": mock_uuid,
         "username": "mock_username",
         "name": "mock_name",
         "password": "mock_password",
@@ -72,26 +71,26 @@ def serialized_user(mock_user_id):
 
 
 @pytest.mark.integration
-def test_create_user_int(mocker, redis, mock_user, mock_user_id, serialized_user):
+def test_create_user_int(mocker, redis, mock_user, mock_uuid, serialized_user):
     mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
-    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_user_id)
+    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_uuid)
 
     user_id = create_user(mock_user)
-    user = redis.hgetall(users_key(mock_user_id))
+    user = redis.hgetall(users_key(mock_uuid))
     assert user == serialized_user
 
     exists = redis.sismember(usernames_unique_key(), mock_user["username"])
     assert exists == True
 
     uid = redis.get(usernames_key(mock_user["username"]))
-    assert uid == mock_user_id
-    assert user_id == mock_user_id
+    assert uid == mock_uuid
+    assert user_id == mock_uuid
 
 
 @pytest.mark.integration
-def test_create_user_username_taken_int(mocker, redis, mock_user, mock_user_id):
+def test_create_user_username_taken_int(mocker, redis, mock_user, mock_uuid):
     mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
-    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_user_id)
+    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_uuid)
 
     redis.sadd(usernames_unique_key(), mock_user["username"])
 
@@ -100,15 +99,15 @@ def test_create_user_username_taken_int(mocker, redis, mock_user, mock_user_id):
         create_user(mock_user)
 
 
-def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_user_id):
+def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_uuid):
     mock_r.sismember.return_value = False
     mock_pipe.sismember.return_value = False
     # Patch the get_db function to return the mock redis object
     mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
     # Patch the gen_id function to return a fixed value
-    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_user_id)
+    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_uuid)
 
-    mock_r.transaction.return_value = mock_user_id
+    mock_r.transaction.return_value = mock_uuid
 
     def side_effect(func, *args, **kwargs):
         # call arg provided from fist call
@@ -126,21 +125,21 @@ def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_user_id)
 
     # Assert that the hset, sadd, and zadd methods were called on the pipeline object
     mock_pipe.hset.assert_called_with(
-        users_key(mock_user_id), mapping=serialize(mock_user, mock_user_id)
+        users_key(mock_uuid), mapping=serialize(mock_user, mock_uuid)
     )
     mock_pipe.sadd.assert_called_with(usernames_unique_key(), "mock_username")
-    mock_pipe.set.assert_called_with(usernames_key("mock_username"), mock_user_id)
+    mock_pipe.set.assert_called_with(usernames_key("mock_username"), mock_uuid)
     # Assert that the execute method was called on the pipeline object
     mock_pipe.multi.assert_called()
     # Assert that the returned user_id is the expected value
-    assert user_id == mock_user_id
+    assert user_id == mock_uuid
 
 
-def test_create_user_username_taken(mocker, mock_r, mock_pipe, mock_user, mock_user_id):
+def test_create_user_username_taken(mocker, mock_r, mock_pipe, mock_user, mock_uuid):
     # Patch the get_db function to return the mock redis object
     mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
     # Patch the gen_id function to return a fixed value
-    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_user_id)
+    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_uuid)
 
     def side_effect(func, *args, **kwargs):
         # call arg provided from fist call
@@ -161,35 +160,35 @@ def test_create_user_username_taken(mocker, mock_r, mock_pipe, mock_user, mock_u
 
 class TestGetUserByUsername:
     @pytest.mark.integration
-    def test_sucesss_int(self, mocker, redis, mock_user, mock_user_id):
+    def test_sucesss_int(self, mocker, redis, mock_user, mock_uuid):
         mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
 
-        redis.set(usernames_key(mock_user["username"]), mock_user_id)
-        redis.hset(users_key(mock_user_id), mapping=serialize(mock_user, mock_user_id))
+        redis.set(usernames_key(mock_user["username"]), mock_uuid)
+        redis.hset(users_key(mock_uuid), mapping=serialize(mock_user, mock_uuid))
 
         result = get_user_by_username(mock_user["username"])
         # deserialzation adds id and removes password
-        mock_user["id"] = mock_user_id
+        mock_user["id"] = mock_uuid
         mock_user.pop("password")
 
         assert mock_user == result
 
-    def test_success(self, mocker, mock_user, mock_r, mock_user_id):
+    def test_success(self, mocker, mock_user, mock_r, mock_uuid):
         # Patch the get_db function to return the mock redis object
         mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
-        mock_r.get.return_value = mock_user_id
-        mock_r.hgetall.return_value = serialize(mock_user, mock_user_id)
+        mock_r.get.return_value = mock_uuid
+        mock_r.hgetall.return_value = serialize(mock_user, mock_uuid)
 
         result = get_user_by_username(mock_user["username"])
 
         mock_r.get.assert_called_with(usernames_key(mock_user["username"]))
-        mock_r.hgetall.assert_called_with(users_key(mock_user_id))
+        mock_r.hgetall.assert_called_with(users_key(mock_uuid))
 
-        mock_user["id"] = mock_user_id
+        mock_user["id"] = mock_uuid
         mock_user.pop("password")
         assert result == mock_user
 
-    def test_user_not_found(self, mocker, mock_user, mock_r, mock_user_id):
+    def test_user_not_found(self, mocker, mock_user, mock_r, mock_uuid):
         mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
         mock_r.get.return_value = None
 
@@ -198,10 +197,10 @@ class TestGetUserByUsername:
 
 
 class TestUserSerializers:
-    def test_serialize(self, mock_user, serialized_user, mock_user_id):
-        assert serialize(mock_user, mock_user_id) == serialized_user
+    def test_serialize(self, mock_user, serialized_user, mock_uuid):
+        assert serialize(mock_user, mock_uuid) == serialized_user
 
-    def test_deserialize(self, mock_user, serialized_user, mock_user_id):
-        mock_user["id"] = mock_user_id
+    def test_deserialize(self, mock_user, serialized_user, mock_uuid):
+        mock_user["id"] = mock_uuid
         mock_user.pop("password")
         assert mock_user == deserialize(serialized_user)
