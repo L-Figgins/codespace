@@ -15,7 +15,7 @@ def create_article(article: dict, user_id: str) -> int:
         articles_key(article_id),
         mapping=serialized,
     )
-    pipe.zadd(article_by_create_at_key(), mapping=(article_id, ts))
+    pipe.zadd(article_by_create_at_key(), mapping={article_id: ts})
     pipe.execute()
 
     return article_id
@@ -29,7 +29,7 @@ def serialize(article: dict, created_at: int, user_id: str):
     result["code"] = code
     result["lang"] = lang
     result["owner_id"] = user_id
-    result["created_at"] = created_at
+    result["created_at"] = str(created_at)
 
     return result
 
@@ -37,8 +37,11 @@ def serialize(article: dict, created_at: int, user_id: str):
 def deserialize(article: dict) -> dict:
     result = {"code_snippet": {}}
     SNIPPET_KEYS = {"code", "lang"}
+    INT_KEYS = {"created_at"}
 
     for k, v in article.items():
+        if v in INT_KEYS:
+            v = int(v)
         if k in SNIPPET_KEYS:
             result["code_snippet"][k] = v
             continue

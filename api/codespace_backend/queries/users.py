@@ -26,6 +26,7 @@ def create_user(user: dict):
         # user id is defined in the other function since redis.py transactions do not allow for
         pipe.hset(users_key(user_id), mapping=serialize(user, user_id))
         pipe.sadd(usernames_unique_key(), user["username"])
+        # set doesnt need an encoded uuid, but hset does
         pipe.set(usernames_key(username), user_id)
         return user_id
 

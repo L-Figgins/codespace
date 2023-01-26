@@ -7,7 +7,7 @@ from codespace_backend.queries.articles import serialize, deserialize, create_ar
 @pytest.fixture()
 def serialized_article(mock_created_at, mock_uuid):
     yield {
-        "created_at": mock_created_at,
+        "created_at": str(mock_created_at),
         "owner_id": mock_uuid,
         "description": "html code",
         "title": "title",
@@ -67,10 +67,35 @@ class TestCreateArticle:
         )
 
         mock_pipe.zadd.assert_called_with(
-            article_by_create_at_key(), mapping=(mock_uuid, mock_created_at)
+            article_by_create_at_key(), mapping={mock_uuid: mock_created_at}
         )
 
         mock_pipe.execute.assert_called()
+
+    @pytest.mark.integration
+    def test_success_int(
+        self,
+        mocker,
+        redis,
+        mock_article,
+        mock_uuid,
+        serialized_article,
+        mock_created_at,
+    ):
+        mocker.patch("codespace_backend.queries.articles.get_db", return_value=redis)
+        mocker.patch(
+            "codespace_backend.queries.articles.gen_id", return_value=mock_uuid
+        )
+        mocker.patch(
+            "codespace_backend.queries.articles.get_utc_timestamp",
+            return_value=mock_created_at,
+        )
+
+        article_id = create_article(article=mock_article, user_id=mock_uuid)
+        assert article_id == mock_uuid
+
+        hash = redis.hgetall(articles_key(mock_uuid))
+        assert hash == serialized_article
 
 
 class TestSerializers:

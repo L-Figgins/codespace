@@ -19,4 +19,4 @@ def gen_id() -> str:
     """
     Generate a random UUID using uuid4
     """
-    return uuid.uuid4()
+    return str(uuid.uuid4())
