@@ -1,5 +1,5 @@
 from ..db import get_db
-from ..util import generate_user_id
+from ..util import gen_id
 from .keys import usernames_unique_key, usernames_key, users_key
 
 
@@ -21,7 +21,7 @@ def create_user(user: dict):
             raise ValueError("Username is taken")
 
         pipe.multi()
-        user_id = generate_user_id()
+        user_id = gen_id()
         username = user["username"]
         # user id is defined in the other function since redis.py transactions do not allow for
         pipe.hset(users_key(user_id), mapping=serialize(user, user_id))

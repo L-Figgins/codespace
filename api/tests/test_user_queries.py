@@ -74,9 +74,7 @@ def serialized_user(mock_user_id):
 @pytest.mark.integration
 def test_create_user_int(mocker, redis, mock_user, mock_user_id, serialized_user):
     mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
-    mocker.patch(
-        "codespace_backend.queries.users.generate_user_id", return_value=mock_user_id
-    )
+    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_user_id)
 
     user_id = create_user(mock_user)
     user = redis.hgetall(users_key(mock_user_id))
@@ -93,9 +91,7 @@ def test_create_user_int(mocker, redis, mock_user, mock_user_id, serialized_user
 @pytest.mark.integration
 def test_create_user_username_taken_int(mocker, redis, mock_user, mock_user_id):
     mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
-    mocker.patch(
-        "codespace_backend.queries.users.generate_user_id", return_value=mock_user_id
-    )
+    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_user_id)
 
     redis.sadd(usernames_unique_key(), mock_user["username"])
 
@@ -109,10 +105,8 @@ def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_user_id)
     mock_pipe.sismember.return_value = False
     # Patch the get_db function to return the mock redis object
     mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
-    # Patch the generate_user_id function to return a fixed value
-    mocker.patch(
-        "codespace_backend.queries.users.generate_user_id", return_value=mock_user_id
-    )
+    # Patch the gen_id function to return a fixed value
+    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_user_id)
 
     mock_r.transaction.return_value = mock_user_id
 
@@ -145,10 +139,8 @@ def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_user_id)
 def test_create_user_username_taken(mocker, mock_r, mock_pipe, mock_user, mock_user_id):
     # Patch the get_db function to return the mock redis object
     mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
-    # Patch the generate_user_id function to return a fixed value
-    mocker.patch(
-        "codespace_backend.queries.users.generate_user_id", return_value=mock_user_id
-    )
+    # Patch the gen_id function to return a fixed value
+    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_user_id)
 
     def side_effect(func, *args, **kwargs):
         # call arg provided from fist call

@@ -15,7 +15,7 @@ def get_utc_timestamp() -> int:
     return int(round(utc_timestamp))
 
 
-def generate_user_id() -> str:
+def gen_id() -> str:
     """
     Generate a random UUID using uuid4
     """
