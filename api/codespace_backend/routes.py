@@ -1,6 +1,6 @@
 from flask import current_app as app
 from flask import request, jsonify, request
-from .queries.articles import get_articles_by_creation_date
+from .queries.articles import get_articles_by_creation_date, create_article
 
 # from flask_json_schema import JsonSchema, JsonValidationError
 # from .request_schema import register_schema
@@ -40,6 +40,17 @@ def get_articles():
     results = get_articles_by_creation_date(offset=offsett, count=count, desc=desc)
 
     return {"payload": results}, 200
+
+
+@app.route("/articles", methods=["POST"])
+def create_articles():
+    # hardcore user_id for now
+    user_id = "cce8594a-0e36-467d-9dd3-efe9c8376c94"
+    data = request.get_json()
+    ## TODO: add validations with json schema and other sanitation things
+    art_id = create_article(data["payload"], user_id)
+
+    return {"payload": art_id}, 200
 
 
 @app.route("/auth/register", methods=["POST"])
