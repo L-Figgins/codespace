@@ -5,14 +5,6 @@ from codespace_backend.queries.keys import (
     article_by_create_at_key,
 )
 
-from codespace_backend.queries.articles import deserialize as deserialize_articles
-
-
-@pytest.mark.integration
-@pytest.fixture()
-def deserialized_article_list(mock_article_list):
-    return list(map(deserialize_articles, mock_article_list.copy()))
-
 
 @pytest.mark.integration
 @pytest.fixture()
@@ -41,7 +33,7 @@ def client(app):
 
 
 @pytest.mark.integration
-def test_get_articles(client, deserialized_article_list):
+def test_get_articles(client, client_serialized_art_out):
     with client:
         response = client.get("/articles")
-        assert response.json["payload"] == deserialized_article_list
+        assert response.json["payload"] == client_serialized_art_out
