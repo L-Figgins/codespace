@@ -85,11 +85,11 @@ class TestCreateArticle:
     ):
         mocker.patch("codespace_backend.queries.articles.get_db", return_value=mock_r)
         mocker.patch(
-            "codespace_backend.queries.articles.get_utc_timestamp",
+            "codespace_backend.queries.schemas.get_utc_timestamp",
             return_value=mock_created_at,
         )
         mocker.patch(
-            "codespace_backend.queries.articles.gen_id", return_value=mock_uuid
+            "codespace_backend.queries.schemas.gen_id", return_value=mock_uuid
         )
 
         result = create_article(mock_article, mock_uuid)
@@ -120,10 +120,10 @@ class TestCreateArticle:
     ):
         mocker.patch("codespace_backend.queries.articles.get_db", return_value=redis)
         mocker.patch(
-            "codespace_backend.queries.articles.gen_id", return_value=mock_uuid
+            "codespace_backend.queries.schemas.gen_id", return_value=mock_uuid
         )
         mocker.patch(
-            "codespace_backend.queries.articles.get_utc_timestamp",
+            "codespace_backend.queries.schemas.get_utc_timestamp",
             return_value=mock_created_at,
         )
 

@@ -1,24 +1,30 @@
 from ..db import get_db
-from ..util import get_utc_timestamp, gen_id
 from .keys import articles_key, article_by_create_at_key
-
+from .schemas import ArticleSchema
 
 def create_article(article: dict, user_id: str) -> int:
     # redis
     r = get_db()
     # article id
-    article_id = gen_id()
-    ts = get_utc_timestamp()
-    serialized = serialize(article, created_at=ts, user_id=user_id, art_id=article_id)
+    # article_id = gen_id()
+    # ts = get_utc_timestamp()
+    # serialized = serialize(article, created_at=ts, user_id=user_id, art_id=article_id)
+    article["owner_id"] = user_id
+    schema = ArticleSchema()
+    art = schema.load(article)
     pipe = r.pipeline()
     pipe.hset(
-        articles_key(article_id),
-        mapping=serialized,
+        articles_key(art.get("id")),
+        mapping=art,
     )
-    pipe.zadd(article_by_create_at_key(), mapping={article_id: ts})
+    print(art.get('created_at'))
+    #redis sorted set for mapping uuid ("member") to "created_at" score
+    zset_mapping = {art.get("id"): int(art.get('created_at'))}
+
+    pipe.zadd(article_by_create_at_key(), mapping=zset_mapping)
     pipe.execute()
 
-    return article_id
+    return art.get("id")
 
 
 # since this app's MVP only expects a single user we do not yet need define
