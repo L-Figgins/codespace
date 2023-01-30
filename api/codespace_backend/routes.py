@@ -51,10 +51,3 @@ def create_articles():
     art_id = create_article(data["payload"], user_id)
 
     return {"payload": art_id}, 200
-
-
-@app.route("/auth/register", methods=["POST"])
-# @schema.validate(register_schema)
-def register_admin_user():
-    request_data = request.get_json()
-    return {"payload": request_data}, 200

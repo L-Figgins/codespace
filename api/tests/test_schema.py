@@ -10,6 +10,8 @@ def test_article_load(mocker, mock_article, mock_uuid, serialized_article, mock_
     mock_article["owner_id"] = mock_uuid
     art = schema.load(mock_article)
 
+    assert art.get("created_at") == str(mock_created_at)
+
     assert serialized_article == art
 
 

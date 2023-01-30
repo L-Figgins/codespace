@@ -2,8 +2,6 @@ import pytest
 
 from codespace_backend.queries.keys import article_by_create_at_key, articles_key
 from codespace_backend.queries.articles import (
-    serialize,
-    deserialize,
     create_article,
     get_articles_by_creation_date,
 )
@@ -25,24 +23,25 @@ def redis_with_article_data(redis, mock_article_list, mock_uuid_list):
 class TestGetArticles:
     @pytest.mark.integration
     def test_success_int(
-        self, mocker, redis_with_data, mock_article_list, mock_uuid_list
+        self, mocker, redis_with_data, client_serialized_art_out,
     ):
         mocker.patch(
             "codespace_backend.queries.articles.get_db", return_value=redis_with_data
         )
 
         articles = get_articles_by_creation_date()
-        deserialized = list(map(deserialize, mock_article_list))
-        assert articles == deserialized
+        
+        assert articles == client_serialized_art_out
 
         articles = get_articles_by_creation_date(offset=1, count=2)
-        assert articles == deserialized[1:3]
+        assert articles == client_serialized_art_out[1:3]
 
     def test_success(
         self,
         mocker,
         mock_r,
         mock_article_list,
+        client_serialized_art_out,
     ):
         mocker.patch("codespace_backend.queries.articles.get_db", return_value=mock_r)
         mock_r.sort.return_value = [d.values() for d in mock_article_list]
@@ -57,10 +56,10 @@ class TestGetArticles:
             f"{articles_key('*')}->lang",
         ]
 
-        deserialized = list(map(deserialize, mock_article_list))
+        
 
         articles = get_articles_by_creation_date()
-        assert articles == deserialized
+        assert articles == client_serialized_art_out
 
         mock_r.sort.assert_called_with(
             article_by_create_at_key(),
@@ -132,18 +131,3 @@ class TestCreateArticle:
 
         hash = redis.hgetall(articles_key(mock_uuid))
         assert hash == serialized_article
-
-
-class TestSerializers:
-    def test_serialize(
-        self, serialized_article, mock_article, mock_uuid, mock_created_at
-    ):
-        assert serialized_article == serialize(
-            mock_article,
-            created_at=mock_created_at,
-            user_id=mock_uuid,
-            art_id=mock_uuid,
-        )
-
-    def test_deserialize(self, deserialized_article, serialized_article):
-        assert deserialized_article == deserialize(serialized_article)

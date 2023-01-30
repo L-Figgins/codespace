@@ -49,7 +49,6 @@ def get_articles_by_creation_date(offset=0, count=10, desc=False):
         groups=True,
     )
     results = [
-        deserialize(
             {
                 "id": id,
                 "title": title,
@@ -59,37 +58,9 @@ def get_articles_by_creation_date(offset=0, count=10, desc=False):
                 "code": code,
                 "lang": lang,
             }
-        )
         for id, title, description, owner_id, created_at, code, lang in ouput
     ]
+    schema = ArticleSchema(many=True)
+    results = schema.dump(results)
 
     return results
-
-
-def serialize(article: dict, created_at: int, user_id: str, art_id: str):
-    # don't mute article
-    result = article.copy()
-    code, lang = result.pop("codeSnippet").values()
-    result["id"] = art_id
-    result["code"] = code
-    result["lang"] = lang
-    result["owner_id"] = user_id
-    result["created_at"] = str(created_at)
-
-    return result
-
-
-def deserialize(article: dict) -> dict:
-    result = {"code_snippet": {}}
-    SNIPPET_KEYS = {"code", "lang"}
-    INT_KEYS = {"created_at"}
-
-    for k, v in article.items():
-        if k in INT_KEYS:
-            v = int(v)
-        if k in SNIPPET_KEYS:
-            result["code_snippet"][k] = v
-            continue
-        result[k] = v
-
-    return result
