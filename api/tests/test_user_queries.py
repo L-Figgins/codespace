@@ -32,7 +32,7 @@ def test_create_user_int(mocker, redis, mock_user, mock_uuid, serialized_user):
 @pytest.mark.integration
 def test_create_user_username_taken_int(mocker, redis, mock_user, mock_uuid):
     mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
-    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_uuid)
+    mocker.patch("codespace_backend.queries.schemas.gen_id", return_value=mock_uuid)
 
     redis.sadd(usernames_unique_key(), mock_user["username"])
 
@@ -81,7 +81,7 @@ def test_create_user_username_taken(mocker, mock_r, mock_pipe, mock_user, mock_u
     # Patch the get_db function to return the mock redis object
     mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
     # Patch the gen_id function to return a fixed value
-    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_uuid)
+    mocker.patch("codespace_backend.queries.schemas.gen_id", return_value=mock_uuid)
 
     def side_effect(func, *args, **kwargs):
         # call arg provided from fist call
