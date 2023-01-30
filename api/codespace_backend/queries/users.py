@@ -1,5 +1,4 @@
 from ..db import get_db
-from ..util import gen_id
 from .keys import usernames_unique_key, usernames_key, users_key
 
 from .schemas import UserSchema
@@ -60,38 +59,3 @@ def get_user_by_username(username: str) -> dict:
     
     schema = UserSchema()
     return schema.dump(r.hgetall(users_key(uid)))
-
-
-def serialize(user: dict, user_id: str) -> dict:
-    """
-    Serializes the user information into a dictionary of specific fields.
-
-    :param user: A dictionary containing the user's information
-    :return: A dictionary containing the 'username', 'name', 'password', and 'email' fields
-
-    """
-    hash = {
-        "id": user_id,
-        "username": user["username"],
-        "name": user["name"],
-        "password": user["password"],
-        "email": user["contactInfo"]["email"],
-    }
-
-    return hash
-
-
-def deserialize(data: dict) -> dict:
-    # more to be added later
-    CONTACT_INFO_KEYS = {"email"}
-    EXCLUDE_KEYS = {"password"}
-    result = {"contactInfo": {}}
-
-    for k, v in data.items():
-        if k in CONTACT_INFO_KEYS:
-            result["contactInfo"][k] = v
-            continue
-        if k not in EXCLUDE_KEYS:
-            result[k] = v
-
-    return result
