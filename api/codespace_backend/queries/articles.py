@@ -5,10 +5,6 @@ from .schemas import ArticleSchema
 def create_article(article: dict, user_id: str) -> int:
     # redis
     r = get_db()
-    # article id
-    # article_id = gen_id()
-    # ts = get_utc_timestamp()
-    # serialized = serialize(article, created_at=ts, user_id=user_id, art_id=article_id)
     article["owner_id"] = user_id
     schema = ArticleSchema()
     art = schema.load(article)
