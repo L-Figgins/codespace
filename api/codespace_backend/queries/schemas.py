@@ -1,4 +1,4 @@
-from marshmallow import Schema, fields, pre_load, post_dump
+from marshmallow import Schema, fields, pre_load, post_dump, ValidationError
 from ..util import gen_id, get_utc_timestamp
 
 
@@ -28,7 +28,7 @@ class ArticleSchema(Schema):
 
         return data
 
-    @post_dump()
+    @post_dump
     def serialze(self, data, many, **kwargs):
         code = data.pop("code")
         lang = data.pop("lang")
@@ -45,18 +45,35 @@ class ArticleSchema(Schema):
 class UserSchema(Schema):
     id = fields.Str(load_default=lambda:gen_id())
     username = fields.Str(required=True)
-    password = fields.Str(required=True)
+    password = fields.Str(load_only=True, required=True)
     name = fields.Str(required=True)
-    image_url = fields.Str(required=False)
+    image_url = fields.Str(required=True)
     email = fields.Email(required=True)
-    github = fields.URL(required=False)
+    github = fields.URL(required=True)
     #TODO validate its a valid phone number
     phone = fields.Str(required=False)
 
     @pre_load
-    def prepare_for_redis(self, data):
-        contact_info = data.pop("contactInfo")
-        data["image_url"] = contact_info.pop("imageURL", "")
-        data["email"] = contact_info.pop("email")
-        data["github"] = contact_info.pop("github", "")
-        data["phone"] = contact_info.pop("phone", "")
+    def prepare_for_redis(self, data, **kwargs):
+        try:
+            contact_info = data.pop("contactInfo")
+            data["image_url"] = contact_info.pop("imageURL", "")
+            data["email"] = contact_info.pop("email")
+            data["github"] = contact_info.pop("github", "")
+            data["phone"] = contact_info.pop("phone", "")
+        except KeyError as e:
+            raise ValidationError(str(e)) 
+
+        return data
+    
+    @post_dump
+    def serialize(self, data, **kwargs):
+        contact_info = {
+            "email": data.pop("email", ""),
+            "imageURL": data.pop("image_url", ""),
+            "github": data.pop("github", ""),
+            "phone": data.pop("phone", "")
+        }
+        data["contactInfo"] = contact_info
+
+        return data
