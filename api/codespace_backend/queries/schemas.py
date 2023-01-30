@@ -42,3 +42,21 @@ class ArticleSchema(Schema):
 
         return data
 
+class UserSchema(Schema):
+    id = fields.Str(load_default=lambda:gen_id())
+    username = fields.Str(required=True)
+    password = fields.Str(required=True)
+    name = fields.Str(required=True)
+    image_url = fields.Str(required=False)
+    email = fields.Email(required=True)
+    github = fields.URL(required=False)
+    #TODO validate its a valid phone number
+    phone = fields.Str(required=False)
+
+    @pre_load
+    def prepare_for_redis(self, data):
+        contact_info = data.pop("contactInfo")
+        data["image_url"] = contact_info.pop("imageURL", "")
+        data["email"] = contact_info.pop("email")
+        data["github"] = contact_info.pop("github", "")
+        data["phone"] = contact_info.pop("phone", "")
