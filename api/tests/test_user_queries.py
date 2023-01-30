@@ -3,8 +3,6 @@ from os import getenv
 from codespace_backend.queries.users import (
     create_user,
     get_user_by_username,
-    serialize,
-    deserialize,
 )
 from codespace_backend.queries.keys import (
     usernames_unique_key,
@@ -13,71 +11,15 @@ from codespace_backend.queries.keys import (
 )
 
 
-@pytest.fixture(name="mock_user")
-def mock_user():
-    user = {
-        "username": "mock_username",
-        "name": "mock_name",
-        "password": "mock_password",
-        "contactInfo": {"email": "mock@email.com"},
-    }
-    yield user
-
-
-# @pytest.mark.integration
-# @pytest.fixture(name="redis")
-# def real_redis():
-#     r = redis.Redis(
-#         host=getenv("REDIS_HOST", ""),
-#         port=getenv("REDIS_PORT", "6379"),
-#         password=getenv("REDIS_PW", "devpassword"),
-#         decode_responses=True,
-#     )
-
-#     yield r
-#     r.flushall()
-
-
-# @pytest.fixture(name="mock_pipe")
-# def mock_pipe(mocker):
-#     mock_pipe = mocker.MagicMock()
-#     yield mock_pipe
-
-
-# @pytest.fixture(name="mock_r")
-# def mock_redis(mocker, mock_pipe):
-#     mock_r = mocker.MagicMock()
-#     mock_r.pipeline.return_value = mock_pipe
-#     yield mock_r
-
-
-# @pytest.fixture(name="mock_uuid")
-# def mock_uuid():
-#     uid = "cce8594a-0e36-467d-9dd3-efe9c8376c94"
-#     yield uid
-
-
-@pytest.fixture()
-def serialized_user(mock_uuid):
-    expected_output = {
-        "id": mock_uuid,
-        "username": "mock_username",
-        "name": "mock_name",
-        "password": "mock_password",
-        "email": "mock@email.com",
-    }
-
-    yield expected_output
-
 
 @pytest.mark.integration
 def test_create_user_int(mocker, redis, mock_user, mock_uuid, serialized_user):
     mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
-    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_uuid)
+    mocker.patch("codespace_backend.queries.schemas.gen_id", return_value=mock_uuid)
 
     user_id = create_user(mock_user)
     user = redis.hgetall(users_key(mock_uuid))
-    assert user == serialized_user
+    assert user == {**serialized_user, "phone":"", "image_url":""}
 
     exists = redis.sismember(usernames_unique_key(), mock_user["username"])
     assert exists == True
@@ -99,13 +41,13 @@ def test_create_user_username_taken_int(mocker, redis, mock_user, mock_uuid):
         create_user(mock_user)
 
 
-def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_uuid):
+def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_uuid, serialized_user):
     mock_r.sismember.return_value = False
     mock_pipe.sismember.return_value = False
     # Patch the get_db function to return the mock redis object
     mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
     # Patch the gen_id function to return a fixed value
-    mocker.patch("codespace_backend.queries.users.gen_id", return_value=mock_uuid)
+    mocker.patch("codespace_backend.queries.schemas.gen_id", return_value=mock_uuid)
 
     mock_r.transaction.return_value = mock_uuid
 
@@ -125,7 +67,7 @@ def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_uuid):
 
     # Assert that the hset, sadd, and zadd methods were called on the pipeline object
     mock_pipe.hset.assert_called_with(
-        users_key(mock_uuid), mapping=serialize(mock_user, mock_uuid)
+        users_key(mock_uuid), mapping={**serialized_user, "phone":"", "image_url": ""}
     )
     mock_pipe.sadd.assert_called_with(usernames_unique_key(), "mock_username")
     mock_pipe.set.assert_called_with(usernames_key("mock_username"), mock_uuid)
@@ -160,24 +102,28 @@ def test_create_user_username_taken(mocker, mock_r, mock_pipe, mock_user, mock_u
 
 class TestGetUserByUsername:
     @pytest.mark.integration
-    def test_sucesss_int(self, mocker, redis, mock_user, mock_uuid):
+    def test_sucesss_int(self, mocker, redis, mock_user, mock_uuid, serialized_user):
         mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
 
         redis.set(usernames_key(mock_user["username"]), mock_uuid)
-        redis.hset(users_key(mock_uuid), mapping=serialize(mock_user, mock_uuid))
+        redis.hset(users_key(mock_uuid), mapping={**serialized_user, "phone": "", "image_url":""})
 
         result = get_user_by_username(mock_user["username"])
         # deserialzation adds id and removes password
         mock_user["id"] = mock_uuid
         mock_user.pop("password")
 
+        expected = {**mock_user}
+        expected["contactInfo"]["imageURL"] = ""
+        expected["contactInfo"]["phone"] = ""
+
         assert mock_user == result
 
-    def test_success(self, mocker, mock_user, mock_r, mock_uuid):
+    def test_success(self, mocker, mock_user, mock_r, mock_uuid, serialized_user):
         # Patch the get_db function to return the mock redis object
         mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
         mock_r.get.return_value = mock_uuid
-        mock_r.hgetall.return_value = serialize(mock_user, mock_uuid)
+        mock_r.hgetall.return_value = serialized_user
 
         result = get_user_by_username(mock_user["username"])
 
@@ -186,7 +132,10 @@ class TestGetUserByUsername:
 
         mock_user["id"] = mock_uuid
         mock_user.pop("password")
-        assert result == mock_user
+        expected = {**mock_user}
+        expected["contactInfo"]["imageURL"] = ""
+        expected["contactInfo"]["phone"] = ""
+        assert result == expected
 
     def test_user_not_found(self, mocker, mock_user, mock_r, mock_uuid):
         mocker.patch("codespace_backend.queries.users.get_db", return_value=mock_r)
@@ -196,11 +145,3 @@ class TestGetUserByUsername:
             get_user_by_username(mock_user["username"])
 
 
-class TestUserSerializers:
-    def test_serialize(self, mock_user, serialized_user, mock_uuid):
-        assert serialize(mock_user, mock_uuid) == serialized_user
-
-    def test_deserialize(self, mock_user, serialized_user, mock_uuid):
-        mock_user["id"] = mock_uuid
-        mock_user.pop("password")
-        assert mock_user == deserialize(serialized_user)

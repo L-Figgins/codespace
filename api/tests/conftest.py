@@ -162,3 +162,31 @@ def mock_article_list(serialized_article, mock_uuid_list):
     # due to the way dictionaries, tuple unpacking, and the declared order of the sort command, ONLY when mocking i must reorder the keys
 
     yield articles
+
+
+# user fixtures
+
+@pytest.fixture(name="mock_user")
+def mock_user():
+    user = {
+        "username": "mock_username",
+        "name": "mock_name",
+        "password": "mock_password",
+        "contactInfo": {"email": "mock@email.com", "github":"https://github.com/L-Figgins"},
+    }
+    yield user
+
+
+@pytest.fixture()
+def serialized_user(mock_uuid):
+    redis_serialized = {
+        "id": mock_uuid,
+        "username": "mock_username",
+        "name": "mock_name",
+        "password": "mock_password",
+        "email": "mock@email.com",
+        "github": "https://github.com/L-Figgins"
+    }
+
+    yield redis_serialized
+

@@ -2,6 +2,8 @@ from ..db import get_db
 from ..util import gen_id
 from .keys import usernames_unique_key, usernames_key, users_key
 
+from .schemas import UserSchema
+
 
 def create_user(user: dict):
     """
@@ -16,22 +18,25 @@ def create_user(user: dict):
     """
 
     def create_user_txn(pipe) -> str:
-        exists = pipe.sismember(usernames_unique_key(), user["username"])
+        username = user.get("username")
+        exists = pipe.sismember(usernames_unique_key(), user.get("username"))
         if exists:
             raise ValueError("Username is taken")
 
         pipe.multi()
-        user_id = gen_id()
-        username = user["username"]
+        user_id = user.get("id")
+     
         # user id is defined in the other function since redis.py transactions do not allow for
-        pipe.hset(users_key(user_id), mapping=serialize(user, user_id))
-        pipe.sadd(usernames_unique_key(), user["username"])
+        pipe.hset(users_key(user_id), mapping=user)
+        pipe.sadd(usernames_unique_key(), username)
         # set doesnt need an encoded uuid, but hset does
         pipe.set(usernames_key(username), user_id)
         return user_id
 
     # r = redis
     r = get_db()
+    schema = UserSchema()
+    user = schema.load(user)
     user_id = r.transaction(
         create_user_txn, usernames_unique_key(), value_from_callable=True
     )
@@ -52,8 +57,9 @@ def get_user_by_username(username: str) -> dict:
 
     if uid == None:
         raise KeyError("User does not exist")
-
-    return deserialize(r.hgetall(users_key(uid)))
+    
+    schema = UserSchema()
+    return schema.dump(r.hgetall(users_key(uid)))
 
 
 def serialize(user: dict, user_id: str) -> dict:
