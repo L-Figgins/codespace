@@ -60,9 +60,9 @@ def deserialized_article(mock_created_at, mock_uuid):
         "id": mock_uuid,
         "title": "title",
         "description": "html code",
-        "owner_id": mock_uuid,
-        "created_at": mock_created_at,
-        "code_snippet": {"code": "<div><div>", "lang": "HTML"},
+        "ownerId": mock_uuid,
+        "createdAt": mock_created_at,
+        "codeSnippet": {"code": "<div><div>", "lang": "HTML"},
     }
 
 
@@ -84,6 +84,52 @@ def mock_uuid_list():
         "b114aae1-5c5e-4ad7-910f-4f302535dfcb",
         "1e03273d-32f3-49e1-aa4e-15e03a24049e",
     ]
+
+
+@pytest.fixture()
+def client_serialized_art_out():
+    yield  [
+  {
+    "id": "678fd3c1-5e75-419c-ac25-c0af12f9cf12",
+    "title": "title",
+    "description": "html code",
+    "ownerId": "cce8594a-0e36-467d-9dd3-efe9c8376c94",
+    "createdAt": 1674702339,
+    "codeSnippet": { "code": "<div><div>", "lang": "HTML" }
+  },
+  {
+    "id": "a05f45b3-a606-4636-b001-3875f49c5d85",
+    "title": "title",
+    "description": "html code",
+    "ownerId": "cce8594a-0e36-467d-9dd3-efe9c8376c94",
+    "createdAt": 1674702439,
+    "codeSnippet": { "code": "<div><div>", "lang": "HTML" }
+  },
+  {
+    "id": "e6c9baff-1d83-467c-b982-b02f059e882a",
+    "title": "title",
+    "description": "html code",
+    "ownerId": "cce8594a-0e36-467d-9dd3-efe9c8376c94",
+    "createdAt": 1674702539,
+    "codeSnippet": { "code": "<div><div>", "lang": "HTML" }
+  },
+  {
+    "id": "b114aae1-5c5e-4ad7-910f-4f302535dfcb",
+    "title": "title",
+    "description": "html code",
+    "ownerId": "cce8594a-0e36-467d-9dd3-efe9c8376c94",
+    "createdAt": 1674702639,
+    "codeSnippet": { "code": "<div><div>", "lang": "HTML" }
+  },
+  {
+    "id": "1e03273d-32f3-49e1-aa4e-15e03a24049e",
+    "title": "title",
+    "description": "html code",
+    "ownerId": "cce8594a-0e36-467d-9dd3-efe9c8376c94",
+    "createdAt": 1674702739,
+    "codeSnippet": { "code": "<div><div>", "lang": "HTML" }
+  }
+]
 
 
 @pytest.fixture()
