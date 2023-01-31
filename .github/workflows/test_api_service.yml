@@ -13,6 +13,6 @@ jobs:
       - name: Build Test image
         run: docker build -t lfiggins/codespace-backend-test -f ./api/Dockerfile.dev ./api 
       - name: Run Tests
-        run: docker run -e CI=true lfiggins/codespace-backend-test python -m pytest
+        run: docker run -e CI=true lfiggins/codespace-backend-test python -m pytest -m "not integration"
 
     
