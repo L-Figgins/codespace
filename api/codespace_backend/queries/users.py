@@ -59,3 +59,13 @@ def get_user_by_username(username: str) -> dict:
     
     schema = UserSchema()
     return schema.dump(r.hgetall(users_key(uid)))
+
+def get_user_by_id(id:str)-> dict:
+    r = get_db()
+    schema = UserSchema()
+    user = r.hgetall(users_key(id))
+    if not user:
+        return None
+
+    return schema.dump(user)
+   

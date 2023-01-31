@@ -3,6 +3,7 @@ from os import getenv
 from codespace_backend.queries.users import (
     create_user,
     get_user_by_username,
+    get_user_by_id,
 )
 from codespace_backend.queries.keys import (
     usernames_unique_key,
@@ -143,5 +144,32 @@ class TestGetUserByUsername:
 
         with pytest.raises(KeyError):
             get_user_by_username(mock_user["username"])
+
+
+class TestGetUserById:
+    @pytest.mark.integration
+    def test_success_int(self, mocker, redis, serialized_user, mock_uuid, mock_user):
+        mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
+        redis.set(usernames_key(mock_user["username"]), mock_uuid)
+        redis.hset(users_key(mock_uuid), mapping={**serialized_user, "phone": "", "image_url":""})
+        
+        user = get_user_by_id(mock_uuid)
+        mock_user["id"] = mock_uuid
+        mock_user.pop("password")
+        expected = {**mock_user}
+        expected["contactInfo"]["imageURL"] = ""
+        expected["contactInfo"]["phone"] = ""
+        assert user == expected
+
+    @pytest.mark.integration
+    def test_usr_not_found_int(self, mocker, redis, serialized_user, mock_uuid, mock_user):
+        mocker.patch("codespace_backend.queries.users.get_db", return_value=redis)
+        redis.set(usernames_key(mock_user["username"]), mock_uuid)
+        redis.hset(users_key(mock_uuid), mapping={**serialized_user, "phone": "", "image_url":""})
+        # an id that does not exist
+        user = get_user_by_id("ANFDSnSFB-AFBSdbSBF-naf")
+       
+        assert user == None
+
 
 
