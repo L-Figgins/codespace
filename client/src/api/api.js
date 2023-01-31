@@ -17,9 +17,9 @@ import axios from "axios";
  * @property {string} username - login username
  * @property {string} name - real name
  * @property {ProfileInfo}
- * @property {string} [imageURL] - profile picture url
  * @property {string} [password] - user password never returned only posted
  * @property {object} [contactInfo = {}] - optional contact conformation object
+ * @property {string} [constactInfo.imageURL] - profile picture url
  * @property {string} [contactInfo.email] - user email addres
  * @property {string} [contactInfo.github] - github profile url
  * @property {string} [contactInfo.phone] - phone number
