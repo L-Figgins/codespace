@@ -75,22 +75,22 @@ export default function SignUp() {
 
                     <div className="col-span-6">
                       <label
-                        htmlFor="street-address"
+                        htmlFor="username"
                         className="block text-sm font-medium text-gray-700"
                       >
                         Username
                       </label>
                       <input
                         type="text"
-                        name="street-address"
-                        id="street-address"
-                        autoComplete="street-address"
+                        name="username"
+                        id="username"
+                        autoComplete="username"
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
                     <div className="col-span-6">
                       <label
-                        htmlFor="street-address"
+                        htmlFor="password"
                         className="block text-sm font-medium text-gray-700"
                       >
                         Password
@@ -99,55 +99,55 @@ export default function SignUp() {
                         type="text"
                         name="password"
                         id="password"
-                        autoComplete="password"
+                        autoComplete="new-password"
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-6 lg:col-span-2">
                       <label
-                        htmlFor="city"
+                        htmlFor="phone"
                         className="block text-sm font-medium text-gray-700"
                       >
                         Phone
                       </label>
                       <input
                         type="text"
-                        name="city"
-                        id="city"
-                        autoComplete="address-level2"
+                        name="phone"
+                        id="phone"
+                        autoComplete="tel"
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                       <label
-                        htmlFor="region"
+                        htmlFor="github"
                         className="block text-sm font-medium text-gray-700"
                       >
                         GitHub
                       </label>
                       <input
                         type="text"
-                        name="region"
-                        id="region"
-                        autoComplete="address-level1"
+                        name="github"
+                        id="github"
+                        autoComplete="url"
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
                       <label
-                        htmlFor="postal-code"
+                        htmlFor="linkedin"
                         className="block text-sm font-medium text-gray-700"
                       >
                         LinkedIn
                       </label>
                       <input
                         type="text"
-                        name="postal-code"
-                        id="postal-code"
-                        autoComplete="postal-code"
+                        name="linkedin"
+                        id="linkedin"
+                        autoComplete="url"
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
