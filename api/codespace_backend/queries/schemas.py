@@ -45,7 +45,7 @@ class ArticleSchema(Schema):
 class UserSchema(Schema):
     id = fields.Str(load_default=lambda:gen_id())
     username = fields.Str(required=True)
-    password = fields.Str(load_only=True, required=True)
+    password = fields.Str(required=True)
     name = fields.Str(required=True)
     image_url = fields.Str(required=True)
     email = fields.Email(required=True)

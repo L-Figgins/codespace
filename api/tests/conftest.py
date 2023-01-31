@@ -190,3 +190,31 @@ def serialized_user(mock_uuid):
 
     yield redis_serialized
 
+
+#auth fixtures
+class AuthActions(object):
+    def __init__(self, client):
+        self._client = client
+
+    def login(self, username='mock_username', password='mock_password'):
+        return self._client.post(
+            '/auth/login',
+            json={"payload":{'username': username, 'password': password, }}
+        )
+
+    def register(self):
+        payload = {
+            "username": "mock_username",
+            "name":"mock_name",
+            "password": "mock_password",
+            "contactInfo": {"email": "mock@email.com", "github":"https://github.com/L-Figgins"}
+        }
+
+        self._client.post("/auth/register", json={"payload":payload})
+        
+    def logout(self):
+        return self._client.get('/auth/logout')
+
+@pytest.fixture
+def auth(client):
+    yield AuthActions(client)
