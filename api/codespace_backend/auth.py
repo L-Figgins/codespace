@@ -1,8 +1,10 @@
+import functools
 from flask import Blueprint, g, redirect, request, session, url_for, jsonify, abort
 from marshmallow import ValidationError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .db import get_db
+
 from .queries.users import create_user, get_user_by_username,get_user_by_id
 
 
@@ -15,12 +17,15 @@ def bad_request(e):
 
 
 @bp.errorhandler(403)
-def bad_request(e):
+def forbidden(e):
     return jsonify(error=str(e)), 403
+
+@bp.errorhandler(401)
+def unauthenticated(e):
+    return jsonify(error=str(e)), 401
 
 
 #this is straight from the docs, but feels like bad practice
-
 @bp.before_app_request
 def load_logged_in_user():
     user_id = session.get("user_id")
@@ -28,6 +33,15 @@ def load_logged_in_user():
         g.user = None
     else:
         g.user = get_user_by_id(user_id)
+
+def login_required(view):
+    @functools.wraps(view)
+    def wrapped_view(*args, **kwargs):
+        if g.user is None:
+            abort(401, description="User Must log in")
+        return view(**kwargs)
+
+    return wrapped_view
 
 
 @bp.route("/register", methods=["POST"])
