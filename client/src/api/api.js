@@ -36,13 +36,19 @@ import axios from "axios";
  * @typedef Article
  * @property {string} title - article title
  * @property {string} description - descript of code snippet post
- * @property {number} date - timestamp of local date
+ * @property {number} createdAt - timestamp of local date <-- changed
  * @property {CodeSnippet} code - snippet string
  *
  */
 
+const ROUTES = {
+  AUTH: "auth",
+  ARTICLES: "articles",
+};
+
 const API = {
   PREFIX: "api",
+
   /**
    * Route /<prefix>/user
    * Method GET admin user if they exist
@@ -109,9 +115,12 @@ const API = {
    * Route /<prefix>/articles?from= & limit
    * @return {Array<Article>} - returns aa
    */
-  getArticles() {
+  async getArticles() {
     //pass
-    return [];
+    const endpoint = `${API.PREFIX}/${ROUTES.ARTICLES}`;
+    return axios.get(endpoint).then((res) => {
+      return res.data.payload;
+    });
   },
 
   /**
@@ -122,7 +131,13 @@ const API = {
    * @return {Promise<object>} - success or payload
    */
 
-  async createArticle() {},
+  async createArticle(article) {
+    const endpoint = `${API.PREFIX}/${ROUTES.ARTICLES}`;
+    if (typeof article !== object) {
+      throw new TypeError(`Expected and object got ${typeof article}`);
+    }
+    return axios.post(endpoint, article);
+  },
 
   /**
    * Route /<prefix>/articles/:id
