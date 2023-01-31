@@ -16,16 +16,15 @@ class ArticleSchema(Schema):
     code = fields.Str()
     lang = fields.Str()
     count = 0
+    
 
     @pre_load
     def prepare_for_redis(self, data, **kwargs):
-        # js uses camel case
-
-        code_snippet = data.pop("codeSnippet")
+        # js uses camel case   
+        code_snippet = data.pop("codeSnippet", {})
         data["code"] = code_snippet.get("code", "")
         data["lang"] = code_snippet.get("lang", "")
         data["created_at"] = str(get_utc_timestamp())
-
         return data
 
     @post_dump
@@ -45,7 +44,7 @@ class ArticleSchema(Schema):
 class UserSchema(Schema):
     id = fields.Str(load_default=lambda:gen_id())
     username = fields.Str(required=True)
-    password = fields.Str(load_only=True, required=True)
+    password = fields.Str(required=True)
     name = fields.Str(required=True)
     image_url = fields.Str(required=True)
     email = fields.Email(required=True)

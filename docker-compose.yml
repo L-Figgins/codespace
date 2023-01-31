@@ -39,6 +39,7 @@ services:
       - REDIS_PORT=6379
       - REDIS_PW=devpassword
       - PYTHONUNBUFFERED=1
+      - SECRET=721556b2a967182d21c113d80d3f5d3bf415f47ee1e309fab97a0d778d2d131e
     depends_on: 
      - redis
   nginx:

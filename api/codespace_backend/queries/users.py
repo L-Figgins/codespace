@@ -43,7 +43,7 @@ def create_user(user: dict):
     return user_id
 
 
-def get_user_by_username(username: str) -> dict:
+def get_user_by_username(username: str, only=None, exclude={"password"} ) -> dict:
     """
     Retrieve a user's information from the database by their username.
 
@@ -57,5 +57,15 @@ def get_user_by_username(username: str) -> dict:
     if uid == None:
         raise KeyError("User does not exist")
     
-    schema = UserSchema()
+    schema = UserSchema(exclude=exclude, only=only)
     return schema.dump(r.hgetall(users_key(uid)))
+
+def get_user_by_id(id:str, only=None, exclude={"password"}) -> dict:
+    r = get_db()
+    schema = UserSchema(only=only, exclude=exclude)
+    user = r.hgetall(users_key(id))
+    if not user:
+        return None
+
+    return schema.dump(user)
+   
