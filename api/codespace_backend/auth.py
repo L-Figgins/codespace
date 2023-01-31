@@ -8,25 +8,25 @@ from .db import get_db
 from .queries.users import create_user, get_user_by_username,get_user_by_id
 
 
-bp = Blueprint("auth", __name__, url_prefix="/auth")
+auth = Blueprint("auth", __name__, url_prefix="/auth")
 
 
-@bp.errorhandler(400)
+@auth.errorhandler(400)
 def bad_request(e):
     return jsonify(error=str(e)), 400
 
 
-@bp.errorhandler(403)
+@auth.errorhandler(403)
 def forbidden(e):
     return jsonify(error=str(e)), 403
 
-@bp.errorhandler(401)
+@auth.errorhandler(401)
 def unauthenticated(e):
     return jsonify(error=str(e)), 401
 
 
 #this is straight from the docs, but feels like bad practice
-@bp.before_app_request
+@auth.before_app_request
 def load_logged_in_user():
     user_id = session.get("user_id")
     if user_id == None:
@@ -44,7 +44,7 @@ def login_required(view):
     return wrapped_view
 
 
-@bp.route("/register", methods=["POST"])
+@auth.route("/register", methods=["POST"])
 # @schema.validate(register_schema)
 def register_admin_user():
     # r = redis
@@ -63,14 +63,14 @@ def register_admin_user():
 
     try:
         user_id = create_user(payload)
-        # bp.logger.info(f"user_payload created with id:{user_id}")
+        # auth.logger.info(f"user_payload created with id:{user_id}")
     except ValidationError:
         abort(400, description="Validation Error")
         
 
     return {"payload": user_id}, 200
 
-@bp.route("/login", methods=["POST"])
+@auth.route("/login", methods=["POST"])
 def login():
     try:
         user_payload = request.get_json()["payload"]

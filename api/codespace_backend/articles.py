@@ -1,27 +1,25 @@
-from flask import current_app as app
-from flask import request, jsonify, abort
+from flask import Blueprint
+from flask import request, jsonify, abort, session
 from marshmallow import ValidationError
 from .queries.articles import get_articles_by_creation_date, create_article
 
-# from flask_json_schema import JsonSchema, JsonValidationError
-# from .request_schema import register_schema
-
-# from .db import get_db
+from .auth import login_required
 from .util import get_utc_timestamp
 
-@app.errorhandler(400)
+articles = Blueprint("articles", __name__)
+
+
+@articles.errorhandler(400)
 def bad_request(e):
     return jsonify(error=str(e)), 400
 
 
-@app.errorhandler(403)
-def bad_request(e):
+@articles.errorhandler(403)
+def forbidden(e):
     return jsonify(error=str(e)), 403
 
-
-
-@app.route("/articles", methods=["GET"])
-def get_articles():
+@articles.route("/articles", methods=["GET"])
+def articles_route():
     """
     Get a list of articles.
 
@@ -38,13 +36,15 @@ def get_articles():
     return {"payload": results}, 200
 
 
-@app.route("/articles", methods=["POST"])
+
+@articles.route('/articles', methods=["POST"])
+@login_required
 def create_articles():
     """
     Create an Article
     """
     # hardcore user_id for now
-    user_id = "cce8594a-0e36-467d-9dd3-efe9c8376c94"
+    user_id = session["user_id"]
     data = request.get_json()
     ## TODO: add validations with json schema and other sanitation things
     try:

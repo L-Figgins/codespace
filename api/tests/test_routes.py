@@ -12,7 +12,7 @@ from codespace_backend.queries.keys import (
 
 @pytest.mark.integration
 @pytest.fixture()
-def app(redis, mock_article_list, mock_uuid_list, mock_uuid, serialized_user):
+def app(redis,mock_article_list, mock_uuid_list, mock_uuid, serialized_user):
     app = create_app()
     app.config.update(
         {
@@ -28,21 +28,42 @@ def app(redis, mock_article_list, mock_uuid_list, mock_uuid, serialized_user):
         )
 
     
-
+    print("url map", app.url_map)
     yield app
 
 
 @pytest.mark.integration
-@pytest.fixture()
+@pytest.fixture(scope="function")
 def client(app):
-    return app.test_client()
-
+    client = app.test_client()
+    yield client
 
 @pytest.mark.integration
-def test_get_articles(client, client_serialized_art_out):
-    with client:
-        response = client.get("/articles")
-        assert response.json["payload"] == client_serialized_art_out
+class TestArticlesEndpoint:
+    def test_get_articles(self,client, client_serialized_art_out):
+        with client:
+            response = client.get("/articles")
+            assert response.status_code == 200
+            assert response.json["payload"] == client_serialized_art_out
+
+    def test_create_article(self, client, auth, redis, mock_article):
+        with client:
+            register_response = auth.register()
+            assert register_response.status_code == 200
+            #login to create session
+            #TODO refactor to use session transaction for testing
+            _ = auth.login()
+            assert _.status_code == 200
+            response = client.post("/articles", json={"payload":mock_article})
+            print(response)
+            assert response.status_code == 200
+            article_id =  response.get_json()["payload"]
+
+            article = redis.hgetall(articles_key(article_id))
+            uid = register_response.get_json()["payload"]
+            assert article["owner_id"] == uid
+
+
 
 
 @pytest.mark.integration
