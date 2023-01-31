@@ -79,5 +79,6 @@ class TestUserSchema:
                 "imageURL": ""
             }
         }
-        assert schema.dump(user) == expected
+        out_schema = UserSchema(exclude={"password"})
+        assert out_schema.dump(user) == expected
 
