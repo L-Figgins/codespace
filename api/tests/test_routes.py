@@ -12,7 +12,7 @@ from codespace_backend.queries.keys import (
 
 @pytest.mark.integration
 @pytest.fixture()
-def app(redis,mock_article_list, mock_uuid_list, mock_uuid, serialized_user):
+def app(redis,mock_article_list, mock_uuid_list):
     app = create_app()
     app.config.update(
         {
