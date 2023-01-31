@@ -210,7 +210,7 @@ class AuthActions(object):
             "contactInfo": {"email": "mock@email.com", "github":"https://github.com/L-Figgins"}
         }
 
-        self._client.post("/auth/register", json={"payload":payload})
+        return self._client.post("/auth/register", json={"payload":payload})
         
     def logout(self):
         return self._client.get('/auth/logout')
