@@ -63,6 +63,18 @@ class TestArticlesEndpoint:
             uid = register_response.get_json()["payload"]
             assert article["owner_id"] == uid
 
+    def test_create_401(self, client, mock_article):
+        # there is no g.user or session[user_id]
+        response = client.post("/articles", json={"payload":mock_article})
+        assert response.status_code == 401
+
+    def test_create_400(self, client, auth):
+        with client:
+            _ = auth.register()
+            _ = auth.login()
+            response = client.post('/articles', json={"payload":{"username": "foo"}})
+            assert response.status_code == 400
+
 
 
 
