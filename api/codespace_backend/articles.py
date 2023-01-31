@@ -49,7 +49,7 @@ def create_articles():
     ## TODO: add validations with json schema and other sanitation things
     try:
         art_id = create_article(data["payload"], user_id)
-    except ValidationError as e:
-        abort(e, 400)
+    except (ValidationError) as e:
+        abort(400 ,str(e))
 
     return {"payload": art_id}, 200
