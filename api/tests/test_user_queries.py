@@ -20,8 +20,8 @@ def test_create_user_int(mocker, redis, mock_user, mock_uuid, serialized_user):
 
     user_id = create_user(mock_user)
     user = redis.hgetall(users_key(mock_uuid))
-    assert user == {**serialized_user, "phone":"", "image_url":""}
-
+    # assert user == {**serialized_user, "phone":"", "image_url":""}
+    assert user == serialized_user
     exists = redis.sismember(usernames_unique_key(), mock_user["username"])
     assert exists == True
 
@@ -68,7 +68,7 @@ def test_create_user_success(mocker, mock_r, mock_user, mock_pipe, mock_uuid, se
 
     # Assert that the hset, sadd, and zadd methods were called on the pipeline object
     mock_pipe.hset.assert_called_with(
-        users_key(mock_uuid), mapping={**serialized_user, "phone":"", "image_url": ""}
+        users_key(mock_uuid), mapping={**serialized_user}
     )
     mock_pipe.sadd.assert_called_with(usernames_unique_key(), "mock_username")
     mock_pipe.set.assert_called_with(usernames_key("mock_username"), mock_uuid)
@@ -117,6 +117,7 @@ class TestGetUserByUsername:
         expected = {**mock_user}
         expected["contactInfo"]["imageURL"] = ""
         expected["contactInfo"]["phone"] = ""
+        expected["contactInfo"]["linkedIn"] = ""
 
         assert mock_user == result
 
@@ -136,6 +137,7 @@ class TestGetUserByUsername:
         expected = {**mock_user}
         expected["contactInfo"]["imageURL"] = ""
         expected["contactInfo"]["phone"] = ""
+        expected["contactInfo"]["linkedIn"] = ""
         assert result == expected
 
     def test_user_not_found(self, mocker, mock_user, mock_r, mock_uuid):
@@ -159,6 +161,7 @@ class TestGetUserById:
         expected = {**mock_user}
         expected["contactInfo"]["imageURL"] = ""
         expected["contactInfo"]["phone"] = ""
+        expected["contactInfo"]["linkedIn"] = ""
         assert user == expected
 
     @pytest.mark.integration
