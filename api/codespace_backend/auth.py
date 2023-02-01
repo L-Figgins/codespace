@@ -82,9 +82,13 @@ def login():
             400,
             description="Malformed request body. The payload must contain a username and password",
         )
-
-    user = get_user_by_username(username, only={"id","password"}, exclude=())
-    is_valid = check_password_hash(user["password"], password)
+    try:
+        user = get_user_by_username(username, only={"id","password"}, exclude=())
+        is_valid = check_password_hash(user["password"], password)
+    except KeyError:
+        abort(403, "incorrect user")
+    except ValueError:
+        abort(400, "username taken")
 
     if not is_valid:
         abort(403, description="incorrect username or password")

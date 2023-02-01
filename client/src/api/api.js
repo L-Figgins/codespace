@@ -161,7 +161,7 @@ const API = {
 
   async createArticle(article) {
     const endpoint = `${API.PREFIX}/${ROUTES.ARTICLES}`;
-    if (typeof article !== object) {
+    if (typeof article !== "object") {
       throw new TypeError(`Expected and object got ${typeof article}`);
     }
     return axios.post(endpoint, article);

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import avatarPlaceHolder from "../assets/avatar-placeholder.png";
 function Header() {
   return (
-    <div className="grid grid-cols-12 grid-rows-2 ">
+    <div className="grid grid-cols-12 grid-rows-1 ">
       <img className="col-span-2 row-span-2" src={avatarPlaceHolder} />
 
       <div className="text-xl font-medium text-black  justify-self-start flex flex-col col-span-2">
@@ -20,8 +20,6 @@ function Header() {
         qui officia deserunt mollit anim id est laborum.
       </div>
       <div className="col-span-1 justify-self-end col-start-11 col-span-2">
-        Socials or maybe a darkmode toggle button
-        {/* <div className="bg-gray-50 px-4 py-3 text-right sm:px-6"> */}
         <Link to={"signup"}>
           <button className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
             Signup
