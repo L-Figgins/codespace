@@ -65,9 +65,7 @@ class UserSchema(Schema):
             # data["linked_in"] = contact_info.get("linkedIn", "")
             return data
         except KeyError as e:
-            raise ValidationError(str(e)) 
-
-        return data
+            raise ValidationError(str(e))
     
     @post_dump
     def serialize(self, data, **kwargs):
