@@ -130,8 +130,9 @@ const API = {
    * @param {string} obj.password - user password
    * @return {Promise<object>}
    */
-  login({ username, password }) {
-    //pass
+  login(credentials) {
+    const endpoint = `${API.PREFIX}/auth/login`;
+    return axios.post(endpoint, formatPostBody(credentials));
   },
 
   logout() {

@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import avatarPlaceHolder from "../assets/avatar-placeholder.png";
 function Header() {
   return (
@@ -20,6 +21,23 @@ function Header() {
       </div>
       <div className="col-span-1 justify-self-end col-start-11 col-span-2">
         Socials or maybe a darkmode toggle button
+        {/* <div className="bg-gray-50 px-4 py-3 text-right sm:px-6"> */}
+        <Link to={"signup"}>
+          <button className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            Signup
+          </button>
+        </Link>
+        <Link to={"about"}>
+          <button className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            About
+          </button>
+        </Link>
+        <Link to={"signin"}>
+          <button className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">
+            Sign In
+          </button>
+        </Link>
+        {/* </div> */}
       </div>
     </div>
   );
