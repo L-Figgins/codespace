@@ -4,7 +4,6 @@ from marshmallow import ValidationError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .db import get_db
-
 from .queries.users import create_user, get_user_by_username,get_user_by_id
 
 
@@ -93,3 +92,9 @@ def login():
     session["user_id"] = user["id"]
 
     return {"payload": "success"}, 200
+
+
+@auth.route("/logout")
+def logout():
+    session.clear()
+    return {"payload":"success"}, 200
