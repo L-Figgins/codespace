@@ -1,6 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
+import { camelCase, trim } from "lodash";
+import api from "../api/api";
 
 export default function SignUp() {
+  const [formData, setFormData] = useState({});
+
+  const handleChange = (e) => {
+    setFormData((data) => {
+      return {
+        ...data,
+        [camelCase([e.target.name])]: trim(e.target.value),
+      };
+    });
+  };
+
+  const onSubmit = (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    console.log(JSON.stringify(formData));
+    api.createAdminUser(formData);
+  };
+
   return (
     <>
       <div className="hidden sm:block" aria-hidden="true">
@@ -21,57 +41,60 @@ export default function SignUp() {
             </div>
           </div>
           <div className="mt-5 md:col-span-2 md:mt-0">
-            <form action="user" method="POST">
+            <form>
               <div className="overflow-hidden shadow sm:rounded-md">
                 <div className="bg-white px-4 py-5 sm:p-6">
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
                       <label
-                        htmlFor="first-name"
+                        htmlFor="name"
                         className="block text-sm font-medium text-gray-700"
                       >
-                        First name
+                        Name
                       </label>
                       <input
                         type="text"
-                        name="first-name"
-                        id="first-name"
+                        name="name"
+                        id="name"
                         autoComplete="given-name"
+                        onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
                       <label
-                        htmlFor="last-name"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Last name
-                      </label>
-                      <input
-                        type="text"
-                        name="last-name"
-                        id="last-name"
-                        autoComplete="family-name"
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-
-                    <div className="col-span-6 sm:col-span-4">
-                      <label
-                        htmlFor="email-address"
+                        htmlFor="email"
                         className="block text-sm font-medium text-gray-700"
                       >
                         Email address
                       </label>
                       <input
                         type="text"
-                        name="email-address"
-                        id="email-address"
+                        name="email"
+                        id="email"
                         autoComplete="email"
+                        onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
+
+                    {/* <div className="col-span-6 sm:col-span-3">
+                      <label
+                        htmlFor="email"
+                        className="block text-sm font-medium text-gray-700"
+                      >
+                        Email address
+                      </label>
+                      <input
+                        type="text"
+                        name="email"
+                        id="email"
+                        autoComplete="email"
+                        onChange={handleChange}
+                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                      />
+                    </div> */}
 
                     <div className="col-span-6">
                       <label
@@ -85,6 +108,7 @@ export default function SignUp() {
                         name="username"
                         id="username"
                         autoComplete="username"
+                        onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -100,6 +124,7 @@ export default function SignUp() {
                         name="password"
                         id="password"
                         autoComplete="new-password"
+                        onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -116,6 +141,7 @@ export default function SignUp() {
                         name="phone"
                         id="phone"
                         autoComplete="tel"
+                        onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -132,6 +158,7 @@ export default function SignUp() {
                         name="github"
                         id="github"
                         autoComplete="url"
+                        onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -148,6 +175,7 @@ export default function SignUp() {
                         name="linkedin"
                         id="linkedin"
                         autoComplete="url"
+                        onChange={handleChange}
                         className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                       />
                     </div>
@@ -155,8 +183,8 @@ export default function SignUp() {
                 </div>
                 <div className="bg-gray-50 px-4 py-3 text-right sm:px-6">
                   <button
-                    type="submit"
                     className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick={onSubmit}
                   >
                     Save
                   </button>
@@ -166,7 +194,6 @@ export default function SignUp() {
           </div>
         </div>
       </div>
-      ;
     </>
   );
 }

@@ -46,6 +46,12 @@ const ROUTES = {
   ARTICLES: "articles",
 };
 
+function formatPostBody(data) {
+  return {
+    payload: { ...data },
+  };
+}
+
 const API = {
   PREFIX: "api",
 
@@ -67,7 +73,28 @@ const API = {
     if (!user || !user.username || !user.password) {
       throw new TypeError("No Username or Password Provided. Invalid User.");
     }
-    return axios.post(endpoint, user);
+
+    const transformData = (data) => {
+      const CONTACT_INFO_KEYS = new Set([
+        "email",
+        "github",
+        "linkedIn",
+        "phone",
+      ]);
+      const result = {
+        contactInfo: {},
+      };
+      for (let key of Object.keys(data)) {
+        if (CONTACT_INFO_KEYS.has(key)) {
+          result.contactInfo[key] = data[key];
+          continue;
+        }
+        result[key] = data[key];
+      }
+      return result;
+    };
+
+    return axios.post(endpoint, formatPostBody(transformData(user)));
   },
 
   /**

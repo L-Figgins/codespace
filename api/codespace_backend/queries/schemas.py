@@ -49,6 +49,7 @@ class UserSchema(Schema):
     image_url = fields.Str(required=True)
     email = fields.Email(required=True)
     github = fields.URL(required=True)
+    linked_in = fields(required=False)
     #TODO validate its a valid phone number
     phone = fields.Str(required=False)
 
