@@ -164,7 +164,7 @@ const API = {
     if (typeof article !== "object") {
       throw new TypeError(`Expected and object got ${typeof article}`);
     }
-    return axios.post(endpoint, article);
+    return axios.post(endpoint, formatPostBody(article));
   },
 
   /**
