@@ -13,6 +13,7 @@ class ArticleSchema(Schema):
     description = fields.Str(required=True)
     created_at = fields.Str(required=True)
     owner_id = fields.Str(required=True)
+    markdown = fields.Str(required=False)
     code = fields.Str()
     lang = fields.Str()
     count = 0
