@@ -46,21 +46,25 @@ class UserSchema(Schema):
     username = fields.Str(required=True)
     password = fields.Str(required=True)
     name = fields.Str(required=True)
-    image_url = fields.Str(required=True)
+    image_url = fields.Str(required=False)
     email = fields.Email(required=True)
     github = fields.URL(required=True)
     linked_in = fields(required=False)
     #TODO validate its a valid phone number
     phone = fields.Str(required=False)
+    linked_in = fields.URL(required=False)
 
     @pre_load
     def prepare_for_redis(self, data, **kwargs):
         try:
             contact_info = data.pop("contactInfo")
-            data["image_url"] = contact_info.pop("imageURL", "")
-            data["email"] = contact_info.pop("email")
-            data["github"] = contact_info.pop("github", "")
-            data["phone"] = contact_info.pop("phone", "")
+            data = {**data, **contact_info}
+            # data["image_url"] = contact_info.get("imageURL", "")
+            # data["email"] = contact_info.get("email")
+            # data["github"] = contact_info.get("github", "")
+            # data["phone"] = contact_info.get("phone", "")
+            # data["linked_in"] = contact_info.get("linkedIn", "")
+            return data
         except KeyError as e:
             raise ValidationError(str(e)) 
 
@@ -72,7 +76,8 @@ class UserSchema(Schema):
             "email": data.pop("email", ""),
             "imageURL": data.pop("image_url", ""),
             "github": data.pop("github", ""),
-            "phone": data.pop("phone", "")
+            "phone": data.pop("phone", ""),
+            "linkedIn": data.pop("linked_in","")
         }
         data["contactInfo"] = contact_info
 

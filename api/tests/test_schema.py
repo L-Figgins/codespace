@@ -41,10 +41,11 @@ class TestUserSchema:
         mocker.patch("codespace_backend.queries.schemas.gen_id", return_value=mock_uuid)
         schema = UserSchema()
 
-        expected = {**serialized_user, "phone": "", "image_url": ""}
+        # incase i change pre_load again
+        # expected = {**serialized_user, "phone": "", "image_url": ""}
         user = schema.load(mock_user)
 
-        assert user == expected
+        assert user == serialized_user
 
     def test_load_failure(self):
         bad_data = {
@@ -76,7 +77,8 @@ class TestUserSchema:
                 "email": "mock@email.com",
                 "github": "https://github.com/L-Figgins",
                 "phone": "",
-                "imageURL": ""
+                "imageURL": "",
+                "linkedIn": ""
             }
         }
         out_schema = UserSchema(exclude={"password"})
