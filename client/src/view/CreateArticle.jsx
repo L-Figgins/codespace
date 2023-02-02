@@ -1,5 +1,7 @@
+import React, { useState } from "react";
 import ReactMarkdown from "react-markdown";
-import react, { useState } from "react";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import api from "../api/api";
 
 export default function CreateArticle() {
@@ -32,7 +34,7 @@ export default function CreateArticle() {
 
   return (
     <div>
-      <h1>markdown generator</h1>
+      <h1 className="flex justify-center">Publish Article</h1>
       <div>
         <div class="flex justify-center">
           <div class="mb-3 xl:w-96">
@@ -160,7 +162,28 @@ export default function CreateArticle() {
         <div className="article-wrapper padding-2 shadow-md">
           <article>
             <main>
-              <ReactMarkdown>{md}</ReactMarkdown>
+              <ReactMarkdown
+                components={{
+                  code({ node, inline, className, children, ...props }) {
+                    const match = /language-(\w+)/.exec(className || "");
+                    return !inline && match ? (
+                      <SyntaxHighlighter
+                        children={String(children).replace(/\n$/, "")}
+                        style={dark}
+                        language={match[1]}
+                        PreTag="div"
+                        {...props}
+                      />
+                    ) : (
+                      <code className={className} {...props}>
+                        {children}
+                      </code>
+                    );
+                  },
+                }}
+              >
+                {md}
+              </ReactMarkdown>
             </main>
           </article>
         </div>
