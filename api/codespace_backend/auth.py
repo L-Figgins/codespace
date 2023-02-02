@@ -76,7 +76,7 @@ def login():
         username = user_payload["username"]
         password = user_payload["password"]
 
-    except KeyError:
+    except (KeyError, ValidationError):
         abort(
             400,
             description="Malformed request body. The payload must contain a username and password",
@@ -86,7 +86,7 @@ def login():
     is_valid = check_password_hash(user["password"], password)
 
     if not is_valid:
-        abort(403, description="incorrect username or password")
+        abort(401, description="incorrect username or password")
 
     session.clear()
     session["user_id"] = user["id"]
