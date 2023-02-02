@@ -13,6 +13,7 @@ class ArticleSchema(Schema):
     description = fields.Str(required=True)
     created_at = fields.Str(required=True)
     owner_id = fields.Str(required=True)
+    markdown = fields.Str(required=False)
     code = fields.Str()
     lang = fields.Str()
     count = 0
@@ -66,9 +67,7 @@ class UserSchema(Schema):
             # data["linked_in"] = contact_info.get("linkedIn", "")
             return data
         except KeyError as e:
-            raise ValidationError(str(e)) 
-
-        return data
+            raise ValidationError(str(e))
     
     @post_dump
     def serialize(self, data, **kwargs):

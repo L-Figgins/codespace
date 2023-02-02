@@ -44,7 +44,6 @@ class TestUserSchema:
         # incase i change pre_load again
         # expected = {**serialized_user, "phone": "", "image_url": ""}
         user = schema.load(mock_user)
-
         assert user == serialized_user
 
     def test_load_failure(self):
@@ -55,6 +54,10 @@ class TestUserSchema:
         with pytest.raises(ValidationError):
             schema = UserSchema()
             schema.load(bad_data)
+
+        with pytest.raises(ValidationError):
+            schema = UserSchema()
+            schema.load({"username": "mock_username", "name":"mock_name", "contactInfo": {"github":"not_a_url"}})
         
     def test_email_validation(self, mock_user):
         #set invailid email

@@ -103,4 +103,29 @@ class TestAuthEndpoints:
             assert response.status_code == 200
             assert response.get_json()["payload"] == "success"
             assert session["user_id"] == mock_uuid
-            
+
+    def test_incorrect_password(self, client, auth):
+        with client:
+            _ = auth.register()
+            login_res = auth.login(password="wrong password")
+            assert login_res.status_code == 401
+
+    def test_bad_request(self, client, auth):
+        with client:
+            _ = auth.register()
+            login_res = client.post("/auth/login", json={"payload":{"username":"usrname"}})
+            assert login_res.status_code == 400
+        
+    def test_logout(self, client, auth):
+        with client:
+            register_res = auth.register()
+            _ = auth.login()
+            assert _.status_code == 200
+
+            uid = register_res.get_json()["payload"]
+            assert session["user_id"] == uid
+
+            _ = client.get("/auth/logout")
+            assert session.get("user_id", None) == None
+
+

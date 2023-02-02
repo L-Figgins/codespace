@@ -4,7 +4,6 @@ from marshmallow import ValidationError
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from .db import get_db
-
 from .queries.users import create_user, get_user_by_username,get_user_by_id
 
 
@@ -77,7 +76,7 @@ def login():
         username = user_payload["username"]
         password = user_payload["password"]
 
-    except KeyError:
+    except (KeyError, ValidationError):
         abort(
             400,
             description="Malformed request body. The payload must contain a username and password",
@@ -91,9 +90,15 @@ def login():
         abort(400, "username taken")
 
     if not is_valid:
-        abort(403, description="incorrect username or password")
+        abort(401, description="incorrect username or password")
 
     session.clear()
     session["user_id"] = user["id"]
 
     return {"payload": "success"}, 200
+
+
+@auth.route("/logout")
+def logout():
+    session.clear()
+    return {"payload":"success"}, 200
