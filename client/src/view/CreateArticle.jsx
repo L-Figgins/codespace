@@ -1,8 +1,13 @@
 import React, { useState } from "react";
-import ReactMarkdown from "react-markdown";
-import SyntaxHighlighter from "react-syntax-highlighter";
+import * as ReactMarkdown from "react-markdown";
+import {Light as SyntaxHighlighter} from "react-syntax-highlighter";
+import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
+import python from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
 import { dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 import api from "../api/api";
+
+SyntaxHighlighter.registerLanguage('javascript', js)
+SyntaxHighlighter.registerLanguage('python', python)
 
 export default function CreateArticle() {
   const [md, setMd] = useState(`\`\`\`def code():\`\`\``);
@@ -36,17 +41,17 @@ export default function CreateArticle() {
     <div>
       <h1 className="flex justify-center">Publish Article</h1>
       <div>
-        <div class="flex justify-center">
-          <div class="mb-3 xl:w-96">
+        <div className="flex justify-center">
+          <div className="mb-3 xl:w-96">
             <label
-              for="exampleText0"
-              class="form-label inline-block mb-2 text-gray-700"
+              htmlFor="exampleText0"
+              className="form-label inline-block mb-2 text-gray-700"
             >
               Article Title
             </label>
             <input
               type="text"
-              class="
+              className="
         form-control
         block
         w-full
@@ -71,18 +76,18 @@ export default function CreateArticle() {
           </div>
         </div>
 
-        <div class="flex justify-center">
-          <div class="mb-3 xl:w-96">
+        <div className="flex justify-center">
+          <div className="mb-3 xl:w-96">
             <label
-              for="exampleText0"
-              class="form-label inline-block mb-2 text-gray-700"
+              htmlFor="exampleText0"
+              className="form-label inline-block mb-2 text-gray-700"
             >
               Article Description
             </label>
             <input
               type="text"
               name="description"
-              class="
+              className="
         form-control
         block
         w-full
