@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import * as ReactMarkdown from "react-markdown";
+import ReactMarkdown from "react-markdown";
 import {Light as SyntaxHighlighter} from "react-syntax-highlighter";
 import js from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
 import python from 'react-syntax-highlighter/dist/esm/languages/hljs/javascript'
@@ -10,7 +10,7 @@ SyntaxHighlighter.registerLanguage('javascript', js)
 SyntaxHighlighter.registerLanguage('python', python)
 
 export default function CreateArticle() {
-  const [md, setMd] = useState(`\`\`\`def code():\`\`\``);
+  const [md, setMd] = useState("");
   const [showPreview, setShowPreview] = useState(false);
   const [articleData, setArticleData] = useState({});
 
@@ -121,7 +121,6 @@ export default function CreateArticle() {
             <textarea
               onChange={(e) => {
                 setMd(e.target.value);
-                handleChange(e);
               }}
               className="
         form-control
