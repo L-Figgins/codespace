@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import avatarPlaceHolder from "../assets/avatar-placeholder.png";
-import CreateArticle from "./CreateArticle";
 
 function Header() {
   return (
@@ -41,7 +40,6 @@ function Header() {
           {/* </div> */}
         </div>
       </div>
-      <CreateArticle />
     </>
   );
 }
