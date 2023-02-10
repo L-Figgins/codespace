@@ -1,4 +1,4 @@
-import axios from "axios";
+import http from "./http";
 
 /**
  * @typedef ContactInfo
@@ -46,15 +46,7 @@ const ROUTES = {
   ARTICLES: "articles",
 };
 
-function formatPostBody(data) {
-  return {
-    payload: { ...data },
-  };
-}
-
 const API = {
-  PREFIX: "api",
-
   /**
    * Route /<prefix>/user
    * Method GET admin user if they exist
@@ -69,7 +61,7 @@ const API = {
    * @return {Promise<object>} - success or payload
    */
   async createAdminUser(user) {
-    const endpoint = `${API.PREFIX}/auth/register`;
+    const endpoint = `/auth/register`;
     if (!user || !user.username || !user.password) {
       throw new TypeError("No Username or Password Provided. Invalid User.");
     }
@@ -94,7 +86,7 @@ const API = {
       return result;
     };
 
-    return axios.post(endpoint, formatPostBody(transformData(user)));
+    return http.post(endpoint, transformData(user));
   },
 
   /**
@@ -131,8 +123,8 @@ const API = {
    * @return {Promise<object>}
    */
   login(credentials) {
-    const endpoint = `${API.PREFIX}/auth/login`;
-    return axios.post(endpoint, formatPostBody(credentials));
+    const endpoint = `/auth/login`;
+    return http.post(endpoint, credentials);
   },
 
   logout() {
@@ -145,8 +137,8 @@ const API = {
    */
   async getArticles() {
     //pass
-    const endpoint = `${API.PREFIX}/${ROUTES.ARTICLES}`;
-    return axios.get(endpoint).then((res) => {
+    const endpoint = `/${ROUTES.ARTICLES}`;
+    return http.get(endpoint).then((res) => {
       return res.data.payload;
     });
   },
@@ -160,11 +152,11 @@ const API = {
    */
 
   async createArticle(article) {
-    const endpoint = `${API.PREFIX}/${ROUTES.ARTICLES}`;
+    const endpoint = `/${ROUTES.ARTICLES}`;
     if (typeof article !== "object") {
       throw new TypeError(`Expected and object got ${typeof article}`);
     }
-    return axios.post(endpoint, formatPostBody(article));
+    return http.post(endpoint, article);
   },
 
   /**
