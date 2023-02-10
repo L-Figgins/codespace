@@ -39,8 +39,7 @@ export default function PublishArticle() {
     const payload = { ...articleData, markdown: md };
     api
       .createArticle(payload)
-      .then((res) => {
-        console.log(res);
+      .then(() => {
         setShowModal(true);
         setNotification({
           title: "Success",
