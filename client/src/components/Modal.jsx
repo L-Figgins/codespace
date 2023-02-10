@@ -86,4 +86,4 @@ function ModalRoot({ title, msg, type, setOpen, open }) {
   );
 }
 
-export let Modal = Object.asisgn(ModalRoot, { ...TYPES });
+export let Modal = Object.assign(ModalRoot, { ...TYPES });
