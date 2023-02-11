@@ -1,5 +1,5 @@
 import http from "../utils/http";
-import API from "../utils/api";
+import * as API from "../utils/api";
 import { beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
 describe("API tests", () => {
@@ -15,6 +15,8 @@ describe("API tests", () => {
       const user = {
         username: "user",
         password: "pw123",
+        email: "test@gmail.com",
+        phone: "15555555",
       };
       const expectedEndPoint = `/auth/register`;
       http.post.mockResolvedValue({
@@ -23,7 +25,14 @@ describe("API tests", () => {
       });
       const response = await API.createAdminUser(user);
       expect(response.data).toEqual({ payload: "Post successful" });
-      expect(http.post).toHaveBeenCalledWith(expectedEndPoint, user);
+      expect(http.post).toHaveBeenCalledWith(expectedEndPoint, {
+        username: "user",
+        password: "pw123",
+        contactInfo: {
+          email: "test@gmail.com",
+          phone: "15555555",
+        },
+      });
     });
   });
   describe("getArticles", () => {
@@ -33,14 +42,17 @@ describe("API tests", () => {
         { id: 1, data: {} },
         { id: 2, data: {} },
       ];
-      const httpRes = { data: { payload: expected }, status: 200 };
-      http.get.mockResolvedValue(httpRes);
+      // const httpRes = { data: { payload: expected }, status: 200 };
+      //payload  unpacking is tested in the inteceptors spec
+      http.get.mockResolvedValue(expected);
       const articles = await API.getArticles();
       expect(http.get).toHaveBeenCalledWith(expectedEndPoint);
       expect(articles).toEqual(expected);
     });
   });
   describe("createArticle", () => {
-    it("should succeed if article is provided");
+    it("should succeed if article is provided", () => {
+      //pass
+    });
   });
 });

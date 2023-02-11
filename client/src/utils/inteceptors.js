@@ -5,7 +5,7 @@
  */
 function formatPostBody(data) {
   return {
-    payload: { ...data },
+    payload: data,
   };
 }
 
@@ -15,8 +15,8 @@ function formatPostBody(data) {
  * @returns
  */
 export const responseHandler = (res) => {
-  if (res?.payload) {
-    return res.payload;
+  if (res?.data?.payload) {
+    return res.data.payload;
   }
   return res;
 };
@@ -38,7 +38,7 @@ export const responseErrorHandler = (error) => {
  */
 export const requestInt = (config) => {
   if (config.method === "post") {
-    config.data = formatPostBody(config);
+    config.data = formatPostBody(config.data);
     return config;
   }
   return config;

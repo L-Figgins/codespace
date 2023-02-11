@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import { camelCase, trim } from "lodash";
-import api from "../utils/api";
+import * as api from "../utils/api";
 import { Modal } from "../components/Modal";
 import MarkdownInput from "../components/MarkdownInput";
 import TextInputField from "../components/TextInput";

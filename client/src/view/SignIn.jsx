@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import api from "../utils/api";
+import * as api from "../utils/api";
 
 function SignIn() {
   const [credentials, setcredentials] = useState({});

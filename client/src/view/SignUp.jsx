@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { camelCase, trim } from "lodash";
-import api from "../utils/api";
+import * as api from "../utils/api";
 import { Link } from "react-router-dom";
 
 export default function SignUp() {
