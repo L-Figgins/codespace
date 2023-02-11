@@ -2,7 +2,6 @@ import http from "../utils/http";
 
 describe("axios http instance", () => {
   it("should have the correct base URL", () => {
-    console.log(http);
     expect(http.defaults.baseURL).toBe("/api");
   });
 });
@@ -32,7 +31,6 @@ describe("Interceptors", () => {
         url: "/testurl",
         data: [1, 2, 3],
       };
-      console.log(http.interceptors.request.handlers);
       const formatedConfig =
         http.interceptors.request.handlers[0].fulfilled(config);
       expect(formatedConfig).toMatchObject({
