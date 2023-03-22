@@ -1,2 +1,11 @@
 FROM nginx
+
+COPY wait_for_host.sh .
 COPY ./default.conf /etc/nginx/conf.d/default.conf
+RUN chmod +x ./wait_for_host.sh
+
+RUN apt-get update && \
+    apt-get install -y netcat && \
+    rm -rf /var/lib/apt/lists/*
+
+ENTRYPOINT [ "./wait_for_host.sh", "api", "5000" ]
