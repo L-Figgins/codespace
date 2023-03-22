@@ -63,8 +63,8 @@ def register_admin_user():
     try:
         user_id = create_user(payload)
         # auth.logger.info(f"user_payload created with id:{user_id}")
-    except ValidationError:
-        abort(400, description="Validation Error")
+    except ValidationError as e:
+        abort(400, description=str(e))
         
 
     return {"payload": user_id}, 200
