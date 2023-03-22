@@ -1,6 +1,6 @@
 // Top level App component
-import React, { createContext, useContext } from "react";
-import api from "../utils/api";
+import React, { createContext, useContext, useState } from "react";
+import * as api from "../utils/api";
 
 const authContext = createContext();
 export function ProvideAuth({ children }) {
