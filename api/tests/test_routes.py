@@ -101,7 +101,7 @@ class TestAuthEndpoints:
             _ = auth.register()
             response = auth.login()
             assert response.status_code == 200
-            assert response.get_json()["payload"] == "success"
+            assert response.get_json()["payload"] == {"id": mock_uuid}
             assert session["user_id"] == mock_uuid
 
     def test_incorrect_password(self, client, auth):

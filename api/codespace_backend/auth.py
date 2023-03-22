@@ -95,7 +95,7 @@ def login():
     session.clear()
     session["user_id"] = user["id"]
 
-    return {"payload": "success"}, 200
+    return {"payload": {"id":user["id"]}}, 200
 
 
 @auth.route("/logout")
