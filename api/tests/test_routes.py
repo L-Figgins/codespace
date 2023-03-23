@@ -128,4 +128,28 @@ class TestAuthEndpoints:
             _ = client.get("/auth/logout")
             assert session.get("user_id", None) == None
 
+@pytest.mark.integration
+class TestUserEndpoints:
+    def test_get_user(self, client, auth,mocker, mock_uuid):
+        mocker.patch("codespace_backend.queries.schemas.gen_id", return_value=mock_uuid)
+        with client:
+            register_response = auth.register()
+            uid = register_response.get_json()["payload"]
+            _ = auth.login()
+            assert _.status_code == 200
+            response = client.get(f'/users/{uid}')
+            user = response.get_json()["payload"]
+            assert user["id"] == uid
+    def test_get_user_401(self, client):
+        with client:
+            res = client.get(f'/users/1')
+            assert res.status_code == 401
+
+    def test_get_user_404(self,auth, client):
+        with client:
+            _ = auth.register()
+            _ = auth.login()
+            res = client.get(f'/users/1')
+            assert res.status_code == 404       
+
 
