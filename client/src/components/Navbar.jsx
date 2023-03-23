@@ -6,7 +6,7 @@ import avatarPlaceHolder from "../assets/avatar-placeholder.png";
 import { useAuth } from "../hooks/use-auth";
 
 const navigation = [
-  { name: "Home", href: "#", current: true },
+  { name: "Home", href: "/", current: true },
   { name: "My Blog", href: "#", current: false },
   { name: "Contact Me", href: "#", current: false },
   { name: "FooBar", href: "#", current: false },
