@@ -7,22 +7,25 @@ import PublishArticle from "./view/PublishArticle";
 import ArticleListElement from "./view/ArticleFeed";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
+import { ProvideAuth } from "./hooks/use-auth";
 
 function App() {
   return (
-    <div className="App">
-      <Navbar />
-      <main>
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="signup" element={<SignUp />} />
-          <Route path="about" element={<AboutMe />} />
-          <Route path="signin" element={<SignIn />} />
-          <Route path="publish" element={<PublishArticle />} />
-          <Route path="feed" element={<ArticleListElement />} />
-        </Routes>
-      </main>
-    </div>
+    <ProvideAuth>
+      <div className="App">
+        <Navbar />
+        <main>
+          <Routes>
+            <Route path="/" element={<Home />} />
+            <Route path="signup" element={<SignUp />} />
+            <Route path="about" element={<AboutMe />} />
+            <Route path="signin" element={<SignIn />} />
+            <Route path="publish" element={<PublishArticle />} />
+            <Route path="feed" element={<ArticleListElement />} />
+          </Routes>
+        </main>
+      </div>
+    </ProvideAuth>
   );
 }
 
