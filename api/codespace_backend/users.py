@@ -4,11 +4,12 @@ from .queries.users import get_user_by_id
 from .auth import login_required
 
 
-users = Blueprint("user", __name__, url_prefix="/users")
+user = Blueprint("user", __name__)
 
-@users.route('/<id>', methods=["GET"] )
+@user.route('/user', methods=["GET"] )
 @login_required
-def get_user(id):
+def get_user():
+    id = session["user_id"]
     print(id)
     user = get_user_by_id(id)
     print(user)
@@ -17,6 +18,4 @@ def get_user(id):
     return {"payload": user} , 200
 
 
-
-    
 

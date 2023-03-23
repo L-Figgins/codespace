@@ -101,7 +101,7 @@ class TestAuthEndpoints:
             _ = auth.register()
             response = auth.login()
             assert response.status_code == 200
-            assert response.get_json()["payload"] == {"id": mock_uuid}
+            assert response.get_json()["payload"]["id"] == mock_uuid
             assert session["user_id"] == mock_uuid
 
     def test_incorrect_password(self, client, auth):
@@ -137,19 +137,20 @@ class TestUserEndpoints:
             uid = register_response.get_json()["payload"]
             _ = auth.login()
             assert _.status_code == 200
-            response = client.get(f'/users/{uid}')
+            response = client.get(f'/user')
             user = response.get_json()["payload"]
             assert user["id"] == uid
     def test_get_user_401(self, client):
         with client:
-            res = client.get(f'/users/1')
+            res = client.get(f'/user')
             assert res.status_code == 401
 
-    def test_get_user_404(self,auth, client):
-        with client:
-            _ = auth.register()
-            _ = auth.login()
-            res = client.get(f'/users/1')
-            assert res.status_code == 404       
+    # def test_get_user_404(self,auth, client):
+    # 404 is no longer testable since it has been switched to using session
+    #     with client:
+    #         _ = auth.register()
+    #         _ = auth.login()
+    #         res = client.get(f'/user')
+    #         assert res.status_code == 404       
 
 
