@@ -9,7 +9,7 @@ const navigation = [
   { name: "Home", href: "/", current: true },
   { name: "My Blog", href: "#", current: false },
   { name: "Contact Me", href: "#", current: false },
-  { name: "FooBar", href: "#", current: false },
+  { name: "Publish", href: "", current: false },
 ];
 
 function classNames(...classes) {
@@ -131,19 +131,46 @@ export default function Navbar() {
                           </Menu.Item>
                         </>
                       ) : (
-                        <Menu.Item>
-                          {({ active }) => (
-                            <a
-                              href="#"
-                              className={classNames(
-                                active ? "bg-gray-100" : "",
-                                "block px-4 py-2 text-sm text-gray-700"
-                              )}
-                            >
-                              Sign out
-                            </a>
-                          )}
-                        </Menu.Item>
+                        <>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                                to="/dashboard"
+                              >
+                                Dashboard
+                              </Link>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <Link
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                                to="/publish"
+                              >
+                                Publish
+                              </Link>
+                            )}
+                          </Menu.Item>
+                          <Menu.Item>
+                            {({ active }) => (
+                              <button
+                                className={classNames(
+                                  active ? "bg-gray-100" : "",
+                                  "block px-4 py-2 text-sm text-gray-700"
+                                )}
+                              >
+                                Sign Out
+                              </button>
+                            )}
+                          </Menu.Item>
+                        </>
                       )}
                     </Menu.Items>
                   </Transition>

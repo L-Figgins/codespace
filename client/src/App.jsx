@@ -8,6 +8,7 @@ import ArticleListElement from "./view/ArticleFeed";
 import { Routes, Route } from "react-router-dom";
 import Navbar from "./components/Navbar";
 import { ProvideAuth } from "./hooks/use-auth";
+import Dashboard from "./view/Dashboard";
 
 function App() {
   return (
@@ -21,6 +22,7 @@ function App() {
             <Route path="about" element={<AboutMe />} />
             <Route path="signin" element={<SignIn />} />
             <Route path="publish" element={<PublishArticle />} />
+            <Route path="dashboard" element={<Dashboard />} />
             <Route path="feed" element={<ArticleListElement />} />
           </Routes>
         </main>
