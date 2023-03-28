@@ -20,6 +20,7 @@ function useProvideAuth() {
   const login = (credentials) => {
     return api.login(credentials).then((user) => {
       setUser(user);
+      navigate("/");
     });
   };
 
@@ -28,6 +29,7 @@ function useProvideAuth() {
       .logout()
       .then(() => {
         setUser(null);
+        navigate("/");
       })
       .catch((err) => {
         console.error(err);
@@ -40,5 +42,5 @@ function useProvideAuth() {
     });
   };
 
-  return { user, login, logout, signup };
+  return { user, login, logout, signup, setUser };
 }
