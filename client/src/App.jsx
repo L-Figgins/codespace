@@ -1,5 +1,5 @@
 import "./App.css";
-import Home from "./view/Home";
+import LandingContent from "./view/LandingContent";
 import SignUp from "./view/SignUp";
 import AboutMe from "./view/AboutMe";
 import SignIn from "./view/SignIn";
@@ -12,6 +12,7 @@ import Dashboard from "./view/Dashboard";
 import { useAuth } from "./hooks/use-auth";
 import { useEffect } from "react";
 import * as api from "./utils/api";
+import MainLayout from "./layouts/MainLayout";
 
 function App() {
   //get userSesions
@@ -32,9 +33,9 @@ function App() {
   return (
     <div className="App">
       <Navbar />
-      <main>
+      <MainLayout>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<LandingContent />} />
           <Route path="signup" element={<SignUp />} />
           <Route path="about" element={<AboutMe />} />
           <Route path="signin" element={<SignIn />} />
@@ -44,7 +45,7 @@ function App() {
           </Route>
           <Route path="feed" element={<ArticleListElement />} />
         </Routes>
-      </main>
+      </MainLayout>
     </div>
   );
 }
