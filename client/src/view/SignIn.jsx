@@ -1,26 +1,18 @@
 import React from "react";
-import { useState } from "react";
-import { Link } from "react-router-dom";
-import * as api from "../utils/api";
+import { useAuth } from "../hooks/use-auth";
+import { useFormData } from "../hooks/use-form-data";
 
 function SignIn() {
-  const [credentials, setcredentials] = useState({});
+  const auth = useAuth();
+  const { formData, onChange } = useFormData({ username: "", password: "" });
 
-  const handleChange = (e) => {
-    setcredentials((data) => {
-      return {
-        ...data,
-        [e.target.name]: e.target.value,
-        // [camelCase([e.target.name])]: trim(e.target.value),
-      };
-    });
-  };
-  console.log(credentials);
   const onSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
-    console.log(JSON.stringify(credentials));
-    api.login(credentials);
+
+    auth.login(formData).catch((err) => {
+      console.error(err);
+    });
   };
 
   return (
@@ -100,11 +92,11 @@ function SignIn() {
                         id="username"
                         name="username"
                         type="username"
-                        autoComplete="email"
                         required
-                        onChange={handleChange}
+                        value={formData.username}
+                        onChange={onChange}
                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                        placeholder="Email address"
+                        placeholder="Username"
                       />
                     </div>
                     <div>
@@ -117,7 +109,7 @@ function SignIn() {
                         type="password"
                         autoComplete="current-password"
                         required
-                        onChange={handleChange}
+                        onChange={onChange}
                         className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="Password"
                       />

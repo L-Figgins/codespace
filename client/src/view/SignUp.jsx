@@ -3,19 +3,11 @@ import { camelCase, trim } from "lodash";
 import * as api from "../utils/api";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/use-auth";
+import { useFormData } from "../hooks/use-form-data";
 
 export default function SignUp() {
-  const [formData, setFormData] = useState({});
+  const { formData, onChange } = useFormData();
   const auth = useAuth();
-
-  const handleChange = (e) => {
-    setFormData((data) => {
-      return {
-        ...data,
-        [camelCase([e.target.name])]: trim(e.target.value),
-      };
-    });
-  };
 
   const onSubmit = (e) => {
     e.preventDefault();
@@ -105,7 +97,7 @@ export default function SignUp() {
                             name="name"
                             id="name"
                             autoComplete="given-name"
-                            onChange={handleChange}
+                            onChange={onChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -122,7 +114,7 @@ export default function SignUp() {
                             name="email"
                             id="email"
                             autoComplete="email"
-                            onChange={handleChange}
+                            onChange={onChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -139,7 +131,7 @@ export default function SignUp() {
                             name="username"
                             id="username"
                             autoComplete="username"
-                            onChange={handleChange}
+                            onChange={onChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -155,7 +147,7 @@ export default function SignUp() {
                             name="password"
                             id="password"
                             autoComplete="new-password"
-                            onChange={handleChange}
+                            onChange={onChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -172,7 +164,7 @@ export default function SignUp() {
                             name="phone"
                             id="phone"
                             autoComplete="tel"
-                            onChange={handleChange}
+                            onChange={onChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -189,7 +181,7 @@ export default function SignUp() {
                             name="github"
                             id="github"
                             autoComplete="url"
-                            onChange={handleChange}
+                            onChange={onChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -206,7 +198,7 @@ export default function SignUp() {
                             name="linkedIn"
                             id="linkedIn"
                             autoComplete="url"
-                            onChange={handleChange}
+                            onChange={onChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
