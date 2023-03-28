@@ -16,7 +16,7 @@ export function useFormData(intialValue) {
 
   const inputProps = {
     formData,
-    onChange: handleChange,
+    handleChange: handleChange,
     loadInitalFormData,
   };
 

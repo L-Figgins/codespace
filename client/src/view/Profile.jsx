@@ -12,7 +12,7 @@ const user = {
 };
 export default function Profile() {
   const auth = useAuth();
-  const { formData, onChange, loadInitalFormData } = useFormData({
+  const { formData, handleChange, loadInitalFormData } = useFormData({
     about: "",
     firstName: "",
     lastName: "",
@@ -70,7 +70,7 @@ export default function Profile() {
                   rows={6}
                   className="mt-1 block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:py-1.5 sm:text-sm sm:leading-6"
                   value={formData.about}
-                  onChange={onChange}
+                  onChange={handleChange}
                 />
               </div>
             </div>
@@ -148,7 +148,7 @@ export default function Profile() {
               type="text"
               name="first-name"
               id="first-name"
-              onChange={onChange}
+              onChange={handleChange}
               autoComplete="given-name"
               className="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
               value={formData.firstName}
@@ -167,7 +167,7 @@ export default function Profile() {
               name="last-name"
               id="last-name"
               autoComplete="family-name"
-              onChange={onChange}
+              onChange={handleChange}
               value={formData.lastName}
               className="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
             />
@@ -184,7 +184,7 @@ export default function Profile() {
               value={formData.linkedIn}
               type="text"
               name="linked-in"
-              onChange={onChange}
+              onChange={handleChange}
               id="linked-in"
               className="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
             />
@@ -202,7 +202,7 @@ export default function Profile() {
               name="github"
               id="github"
               value={formData.github}
-              onChange={onChange}
+              onChange={handleChange}
               className="mt-2 block w-full rounded-md border-0 px-3 py-1.5 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:border-0 focus:ring-2 focus:ring-inset focus:ring-sky-500 sm:text-sm sm:leading-6"
             />
           </div>

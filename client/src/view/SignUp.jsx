@@ -6,7 +6,7 @@ import { useAuth } from "../hooks/use-auth";
 import { useFormData } from "../hooks/use-form-data";
 
 export default function SignUp() {
-  const { formData, onChange } = useFormData();
+  const { formData, handleChange } = useFormData();
   const auth = useAuth();
 
   const onSubmit = (e) => {
@@ -97,7 +97,7 @@ export default function SignUp() {
                             name="name"
                             id="name"
                             autoComplete="given-name"
-                            onChange={onChange}
+                            onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -114,7 +114,7 @@ export default function SignUp() {
                             name="email"
                             id="email"
                             autoComplete="email"
-                            onChange={onChange}
+                            onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -131,7 +131,7 @@ export default function SignUp() {
                             name="username"
                             id="username"
                             autoComplete="username"
-                            onChange={onChange}
+                            onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -147,7 +147,7 @@ export default function SignUp() {
                             name="password"
                             id="password"
                             autoComplete="new-password"
-                            onChange={onChange}
+                            onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -164,7 +164,7 @@ export default function SignUp() {
                             name="phone"
                             id="phone"
                             autoComplete="tel"
-                            onChange={onChange}
+                            onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -181,7 +181,7 @@ export default function SignUp() {
                             name="github"
                             id="github"
                             autoComplete="url"
-                            onChange={onChange}
+                            onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>
@@ -198,7 +198,7 @@ export default function SignUp() {
                             name="linkedIn"
                             id="linkedIn"
                             autoComplete="url"
-                            onChange={onChange}
+                            onChange={handleChange}
                             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                           />
                         </div>

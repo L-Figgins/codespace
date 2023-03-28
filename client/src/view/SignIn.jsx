@@ -1,17 +1,24 @@
-import React from "react";
+import React, { useState } from "react";
 import { useAuth } from "../hooks/use-auth";
 import { useFormData } from "../hooks/use-form-data";
+import ErrorMessage from "../components/ErrorMsg";
 
 function SignIn() {
   const auth = useAuth();
-  const { formData, onChange } = useFormData({ username: "", password: "" });
+  const [invalidCredentials, setInvalidCredentials] = useState(false);
+  const { formData, handleChange } = useFormData({
+    username: "",
+    password: "",
+  });
 
   const onSubmit = (e) => {
     e.preventDefault();
     e.stopPropagation();
 
     auth.login(formData).catch((err) => {
-      console.error(err);
+      if (err.response.status == 400) {
+        setInvalidCredentials(true);
+      }
     });
   };
 
@@ -75,13 +82,18 @@ function SignIn() {
           {/* {form start} */}
           <div className=" mx-auto mt-16 flex max-w-2xl sm:mt-24 lg:ml-0 lg:mt-0 lg:mr-0 lg:max-w-none lg:flex-none">
             <div className="flex min-h-full items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-              <div className="w-full max-w-md space-y-8">
+              <div className="w-full max-w-md space-y-7">
                 <div>
                   <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-white">
                     Sign in to your account
                   </h2>
                 </div>
                 <form className="mt-8 space-y-6">
+                  <ErrorMessage
+                    visible={invalidCredentials}
+                    msg="Invalid Username or Password"
+                  />
+
                   <input type="hidden" name="remember" defaultValue="true" />
                   <div className="-space-y-px rounded-md shadow-sm">
                     <div>
@@ -94,7 +106,7 @@ function SignIn() {
                         type="username"
                         required
                         value={formData.username}
-                        onChange={onChange}
+                        onChange={handleChange}
                         className="relative block w-full appearance-none rounded-none rounded-t-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="Username"
                       />
@@ -109,7 +121,7 @@ function SignIn() {
                         type="password"
                         autoComplete="current-password"
                         required
-                        onChange={onChange}
+                        onChange={handleChange}
                         className="relative block w-full appearance-none rounded-none rounded-b-md border border-gray-300 px-3 py-2 text-gray-900 placeholder-gray-500 focus:z-10 focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                         placeholder="Password"
                       />
