@@ -1,6 +1,5 @@
 import { useAuth } from "../hooks/use-auth";
 import { useFormData } from "../hooks/use-form-data";
-import { CircleSpinner } from "../components/Spinner";
 import { useEffect } from "react";
 
 const user = {
@@ -20,8 +19,6 @@ export default function Profile() {
     github: "",
   });
 
-  console.log(auth?.user);
-
   useEffect(() => {
     loadInitalFormData({
       about: auth?.user?.about || "",
@@ -31,12 +28,6 @@ export default function Profile() {
       github: auth?.user?.contactInfo?.github,
     });
   }, [auth.user]);
-  console.log(JSON.stringify(formData, null, 4));
-
-  // return !auth.user ? (
-  //   <CircleSpinner />
-  // ) : (
-  //   <>
   return (
     <form
       className="divide-y divide-gray-200 lg:col-span-9"
