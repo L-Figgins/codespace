@@ -1,4 +1,5 @@
 import { Fragment, useState } from "react";
+import classNames from "../utils/classnames";
 import { CogIcon, UserCircleIcon } from "@heroicons/react/24/outline";
 import { Outlet } from "react-router-dom";
 
@@ -18,10 +19,6 @@ const subNavigation = [
   // { name: "Billing", href: "#", icon: CreditCardIcon, current: false },
   // { name: "Integrations", href: "#", icon: SquaresPlusIcon, current: false },
 ];
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function Dashboard() {
   return (
