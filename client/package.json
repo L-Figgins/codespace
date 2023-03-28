@@ -19,7 +19,8 @@
     "react-dom": "^18.2.0",
     "react-markdown": "^8.0.5",
     "react-router-dom": "^6.8.0",
-    "react-syntax-highlighter": "^15.5.0"
+    "react-syntax-highlighter": "^15.5.0",
+    "validator": "^13.9.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.26",
