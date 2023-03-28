@@ -87,7 +87,7 @@ def login():
     except KeyError:
         abort(400, description="Incorrect user")
     except ValueError:
-        abort(400, Description="Username taken")
+        abort(400, description="Username taken")
 
     if not is_valid:
         abort(400, description="Incorrect Username or Password")

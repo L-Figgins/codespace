@@ -95,7 +95,7 @@ export const login = (credentials) => {
 };
 
 export const logout = () => {
-  throw new NotImplementedError();
+  return http.get("/auth/logout");
 };
 
 /**
