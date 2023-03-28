@@ -85,12 +85,12 @@ def login():
         user = get_user_by_username(username, exclude=())
         is_valid = check_password_hash(user["password"], password)
     except KeyError:
-        abort(403, "incorrect user")
+        abort(400, description="Incorrect user")
     except ValueError:
-        abort(400, "username taken")
+        abort(400, Description="Username taken")
 
     if not is_valid:
-        abort(401, description="incorrect username or password")
+        abort(400, description="Incorrect Username or Password")
 
     session.clear()
     session["user_id"] = user["id"]
