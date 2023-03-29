@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useAuth } from "../hooks/use-auth";
 import { useFormData } from "../hooks/use-form-data";
-import ErrorMessage from "../components/ErrorMsg";
+import { ValidationError } from "../shared/FormControl";
 import AuthButton from "../components/AuthButton";
 
 function SignIn() {
@@ -35,7 +35,7 @@ function SignIn() {
               </h2>
             </div>
             <form className="mt-8 space-y-6">
-              <ErrorMessage
+              <ValidationError
                 visible={invalidCredentials}
                 msg="Invalid Username or Password"
               />
