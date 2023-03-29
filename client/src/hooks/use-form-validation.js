@@ -14,7 +14,7 @@ import { useFormData } from "./use-form-data";
  * @returns {Object} - obj containing
  */
 export function useFromValidation(initialValue, validate, submit) {
-  const { formData, handleChange, loadInitialData } = useFormData;
+  const { formData, handleChange, loadInitialData } = useFormData({});
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
 
