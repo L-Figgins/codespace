@@ -1,13 +1,15 @@
 import React, { useState } from "react";
-import { camelCase, trim } from "lodash";
-import * as api from "../utils/api";
-import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/use-auth";
 import { useFormData } from "../hooks/use-form-data";
 import AuthButton from "../components/AuthButton";
+import Input from "../shared/Input";
+import FormControl from "../shared/FormControl/";
+
+const DEFAULT_LABEL_CLASSES =
+  "block text-sm font-medium leading-6 text-gray-900";
 
 export default function SignUp() {
-  const { formData, handleChange } = useFormData();
+  const { formData, handleChange } = useFormData({ email: "" });
   const auth = useAuth();
 
   const onSubmit = (e) => {
@@ -18,13 +20,13 @@ export default function SignUp() {
   };
 
   return (
-    <div className="items-start justify-center mx-auto px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
+    <div className="items-start justify-center mx-auto px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-20 lg:px-8">
       <div className="mt-10 sm:mt-0 flex justify-center">
         <div className="md:grid md:grid-cols-2 md:gap-6">
           <div className="mt-5 md:col-span-2 md:mt-0">
             <div>
               <h2 className="mt-6 mb-2 text-center text-3xl font-bold tracking-tight text-white">
-                Create an account
+                Create an Account
               </h2>
             </div>
             <form>
@@ -32,121 +34,148 @@ export default function SignUp() {
                 <div className="bg-white px-4 py-5 sm:p-6 rounded-md">
                   <div className="grid grid-cols-6 gap-6">
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="name"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Name
-                      </label>
-                      <input
-                        type="text"
-                        name="name"
-                        id="name"
-                        autoComplete="given-name"
+                      <FormControl onChange={handleChange} error="">
+                        <label htmlFor="name" className={DEFAULT_LABEL_CLASSES}>
+                          Name:
+                        </label>
+                        <Input
+                          type="text"
+                          name="name"
+                          id="name"
+                          autoComplete="given-name"
+                          placeholder="John Smith"
+                        />
+                      </FormControl>
+                    </div>
+                    <div className="col-span-6 sm:col-span-3">
+                      <FormControl
+                        name="email"
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
+                        error=""
+                        // error={{ msg: "hello" }}
+                      >
+                        <label
+                          htmlFor="email"
+                          className={DEFAULT_LABEL_CLASSES}
+                        >
+                          Email:
+                        </label>
+                        <Input
+                          value={formData.email}
+                          type="text"
+                          name="email"
+                          placeholder="you@example.com"
+                          id="email"
+                          autoComplete="email"
+                        />
+                      </FormControl>
                     </div>
 
                     <div className="col-span-6 sm:col-span-3">
-                      <label
-                        htmlFor="email"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Email address
-                      </label>
-                      <input
-                        type="text"
-                        name="email"
-                        id="email"
-                        autoComplete="email"
+                      <FormControl
+                        name="username"
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
+                        error=""
+                      >
+                        <label
+                          htmlFor="email"
+                          className={DEFAULT_LABEL_CLASSES}
+                        >
+                          Username:
+                        </label>
+                        <Input
+                          type="text"
+                          name="username"
+                          id="username"
+                          autoComplete="username"
+                          placeholder="username"
+                        />
+                      </FormControl>
                     </div>
 
-                    <div className="col-span-6">
-                      <label
-                        htmlFor="username"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Username
-                      </label>
-                      <input
-                        type="text"
-                        name="username"
-                        id="username"
-                        autoComplete="username"
-                        onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
-                    </div>
-                    <div className="col-span-6">
-                      <label
-                        htmlFor="password"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Password
-                      </label>
-                      <input
-                        type="text"
+                    <div className="col-span-6 sm:col-span-3">
+                      <FormControl
                         name="password"
-                        id="password"
-                        autoComplete="new-password"
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
+                        error=""
+                      >
+                        <label
+                          htmlFor="email"
+                          className={DEFAULT_LABEL_CLASSES}
+                        >
+                          Password
+                        </label>
+
+                        <Input
+                          type="password"
+                          name="password"
+                          id="password"
+                          autoComplete="new-password"
+                        />
+                      </FormControl>
                     </div>
 
                     <div className="col-span-6 sm:col-span-6 lg:col-span-2">
-                      <label
-                        htmlFor="phone"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        Phone
-                      </label>
-                      <input
-                        type="text"
+                      <FormControl
                         name="phone"
-                        id="phone"
-                        autoComplete="tel"
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
+                        error=""
+                      >
+                        <label
+                          htmlFor="phone"
+                          className={DEFAULT_LABEL_CLASSES}
+                        >
+                          Phone:
+                        </label>
+                        <Input
+                          type="text"
+                          name="phone"
+                          id="phone"
+                          autoComplete="tel"
+                        />
+                      </FormControl>
                     </div>
 
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                      <label
-                        htmlFor="github"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        GitHub
-                      </label>
-                      <input
-                        type="text"
+                      <FormControl
                         name="github"
-                        id="github"
-                        autoComplete="url"
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
+                        error=""
+                      >
+                        <label
+                          htmlFor="github"
+                          className={DEFAULT_LABEL_CLASSES}
+                        >
+                          GitHub:
+                        </label>
+                        <Input
+                          type="text"
+                          name="github"
+                          id="github"
+                          autoComplete="url"
+                        />
+                      </FormControl>
                     </div>
 
                     <div className="col-span-6 sm:col-span-3 lg:col-span-2">
-                      <label
-                        htmlFor="linkedIn"
-                        className="block text-sm font-medium text-gray-700"
-                      >
-                        LinkedIn
-                      </label>
-                      <input
-                        type="text"
-                        name="linkedIn"
-                        id="linkedIn"
-                        autoComplete="url"
+                      <FormControl
+                        name="linked-in"
                         onChange={handleChange}
-                        className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                      />
+                        error=""
+                      >
+                        <label
+                          htmlFor="linked-in"
+                          className={DEFAULT_LABEL_CLASSES}
+                        >
+                          LinkedIn:
+                        </label>
+                        <Input
+                          type="text"
+                          name="linked-in"
+                          id="linked-in"
+                          autoComplete="url"
+                        />
+                      </FormControl>
                     </div>
                   </div>
                 </div>
