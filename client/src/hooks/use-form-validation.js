@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useFormData } from "./use-form-data";
 
 /**
@@ -13,16 +14,18 @@ import { useFormData } from "./use-form-data";
  * @param {Function} submit - submit function
  * @returns {Object} - obj containing
  */
-export function useFromValidation(initialValue, validate, submit) {
-  const { formData, handleChange, loadInitialData } = useFormData({});
+export function useFormValidation(initialValue, validate, onSubmit) {
+  const { formData, handleChange, loadInitialData } = useFormData(initialValue);
   const [errors, setErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  console.log("FormData", JSON.stringify(formData, null, 4));
 
   useEffect(() => {
     if (isSubmitting) {
       const noErrors = Object.keys(errors).length === 0;
       if (noErrors) {
-        onSubmit(form);
+        onSubmit(formData);
       }
       setIsSubmitting(false);
     }
@@ -35,8 +38,9 @@ export function useFromValidation(initialValue, validate, submit) {
     setIsSubmitting(true);
   }
 
-  function handleBlur() {
-    const validationErrors = validate(form);
+  function handleBlur(e) {
+    console.log(e);
+    const validationErrors = validate(formData);
     setErrors(validationErrors);
   }
 

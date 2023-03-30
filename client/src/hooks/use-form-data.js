@@ -6,6 +6,7 @@ export function useFormData(intialValue) {
 
   function handleChange(e) {
     setFormData((prevState) => {
+      console.log(e);
       return { ...prevState, [camelCase(e.target.name)]: trim(e.target.value) };
     });
   }
@@ -16,7 +17,7 @@ export function useFormData(intialValue) {
 
   const inputProps = {
     formData,
-    handleChange: handleChange,
+    handleChange,
     loadInitalFormData,
   };
 
