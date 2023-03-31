@@ -1,8 +1,8 @@
 import "./App.css";
 import LandingContent from "./view/LandingContent";
-import SignUp from "./view/SignUp";
+import SignUp from "./features/SignUp";
 import AboutMe from "./view/AboutMe";
-import SignIn from "./view/SignIn";
+import SignIn from "./features/SignIn";
 import PublishArticle from "./view/PublishArticle";
 import Profile from "./view/Profile";
 import ArticleListElement from "./view/ArticleFeed";
@@ -13,6 +13,7 @@ import { useAuth } from "./hooks/use-auth";
 import { useEffect } from "react";
 import * as api from "./utils/api";
 import MainLayout from "./layouts/MainLayout";
+import AuthLayout from "./layouts/AuthLayout";
 
 function App() {
   //get userSesions
@@ -36,9 +37,11 @@ function App() {
       <MainLayout>
         <Routes>
           <Route path="/" element={<LandingContent />} />
-          <Route path="signup" element={<SignUp />} />
           <Route path="about" element={<AboutMe />} />
-          <Route path="signin" element={<SignIn />} />
+          <Route element={<AuthLayout />}>
+            <Route path="/signup" element={<SignUp />} />
+            <Route path="signin" element={<SignIn />} />
+          </Route>
           <Route path="publish" element={<PublishArticle />} />
           <Route path="dashboard" element={<Dashboard />}>
             <Route index element={<Profile />} />
