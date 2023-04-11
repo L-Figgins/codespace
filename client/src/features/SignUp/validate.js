@@ -29,9 +29,12 @@ export default function validate(data) {
     errors.password = { msg: "Invalid Password" };
   }
 
-  const alphaNumericFields = ["username", "name"];
-  for (const field of alphaNumericFields) {
-    const valid = isAlphaNumeric(data[field]);
+  const alphaNumericFields = [
+    ["username", undefined],
+    ["name", { ignore: " " }],
+  ];
+  for (const [field, options] of alphaNumericFields) {
+    const valid = isAlphaNumeric(data[field], "en-US", options);
     if (!valid) {
       errors[field] = { msg: `${field}'s must be Alphanumeric` };
     }
