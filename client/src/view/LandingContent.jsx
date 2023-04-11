@@ -2,7 +2,7 @@ import React from "react";
 
 function LandingContent() {
   return (
-    <>
+    <div className="mx-auto px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
       <div className="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-8">
         {/* <div className="mt-24 sm:mt-32 lg:mt-16">
             <a href="#" className="inline-flex space-x-6">
@@ -53,7 +53,7 @@ function LandingContent() {
           />
         </div>
       </div>
-    </>
+    </div>
   );
 }
 

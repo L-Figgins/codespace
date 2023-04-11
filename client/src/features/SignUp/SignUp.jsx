@@ -1,7 +1,7 @@
-import React, { useCallback } from "react";
+import React from "react";
 import { useAuth } from "../../hooks/use-auth";
 import { useFormValidation } from "../../hooks/use-form-validation";
-import AuthButton from "../../components/AuthButton";
+import AuthButton from "../../shared/AuthButton";
 import Input from "../../shared/Input";
 import FormControl from "../../shared/FormControl";
 import validate from "./validate";
@@ -41,11 +41,7 @@ export default function SignUp() {
           <div className="bg-white px-4 py-5 sm:p-6 rounded-md">
             <div className="grid grid-cols-6 gap-6">
               <div className="col-span-6 sm:col-span-3">
-                <FormControl
-                  onBlur={handleBlur}
-                  onChange={handleChange}
-                  error={errors.name}
-                >
+                <FormControl onChange={handleChange} error={errors.name}>
                   <label htmlFor="name" className={DEFAULT_LABEL_CLASSES}>
                     Name:
                   </label>
@@ -61,6 +57,7 @@ export default function SignUp() {
               <div className="col-span-6 sm:col-span-3">
                 <FormControl
                   name="email"
+                  handleBlur={handleBlur}
                   onChange={handleChange}
                   error={errors.email}
                   // error={{ msg: "hello" }}
@@ -83,6 +80,7 @@ export default function SignUp() {
                   name="username"
                   onChange={handleChange}
                   error={errors.username}
+                  handleBlur={handleBlur}
                 >
                   <label htmlFor="username" className={DEFAULT_LABEL_CLASSES}>
                     Username:
@@ -101,6 +99,7 @@ export default function SignUp() {
                   name="password"
                   onChange={handleChange}
                   error={errors.password}
+                  handleBlur={handleBlur}
                 >
                   <label htmlFor="password" className={DEFAULT_LABEL_CLASSES}>
                     Password
@@ -119,6 +118,7 @@ export default function SignUp() {
                   name="phone"
                   onChange={handleChange}
                   error={errors.phone}
+                  handleBlur={handleBlur}
                 >
                   <label htmlFor="phone" className={DEFAULT_LABEL_CLASSES}>
                     Phone:
@@ -132,6 +132,7 @@ export default function SignUp() {
                   name="github"
                   onChange={handleChange}
                   error={errors.github}
+                  handleBlur={handleBlur}
                 >
                   <label htmlFor="github" className={DEFAULT_LABEL_CLASSES}>
                     GitHub:
@@ -145,6 +146,7 @@ export default function SignUp() {
                   name="linked-in"
                   onChange={handleChange}
                   error={errors.linkedIn}
+                  handleBlur={handleBlur}
                 >
                   <label htmlFor="linked-in" className={DEFAULT_LABEL_CLASSES}>
                     LinkedIn:

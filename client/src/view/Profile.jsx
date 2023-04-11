@@ -48,10 +48,7 @@ export default function Profile() {
         <div className="mt-6 flex flex-col lg:flex-row">
           <div className="flex-grow space-y-6">
             <div>
-              <label
-                htmlFor="about"
-                className="block text-sm font-medium leading-6 text-gray-900"
-              >
+              <label htmlFor="about" className={DEFAULT_LABEL_CLASSES}>
                 About
               </label>
               <div className="mt-2">
@@ -129,10 +126,7 @@ export default function Profile() {
 
         <div className="mt-6 grid grid-cols-12 gap-6">
           <div className="col-span-12 sm:col-span-6">
-            <label
-              htmlFor="first-name"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
+            <label htmlFor="first-name" className={DEFAULT_LABEL_CLASSES}>
               First name
             </label>
             <input
@@ -147,10 +141,7 @@ export default function Profile() {
           </div>
 
           <div className="col-span-12 sm:col-span-6">
-            <label
-              htmlFor="last-name"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
+            <label htmlFor="last-name" className={DEFAULT_LABEL_CLASSES}>
               Last name
             </label>
             <input
@@ -165,10 +156,7 @@ export default function Profile() {
           </div>
 
           <div className="col-span-12 sm:col-span-6">
-            <label
-              htmlFor="linked-in"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
+            <label htmlFor="linked-in" className={DEFAULT_LABEL_CLASSES}>
               LinkedIn
             </label>
             <input
@@ -182,10 +170,7 @@ export default function Profile() {
           </div>
 
           <div className="col-span-12 sm:col-span-6">
-            <label
-              htmlFor="github"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
+            <label htmlFor="github" className={DEFAULT_LABEL_CLASSES}>
               Github
             </label>
             <input

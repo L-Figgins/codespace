@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useAuth } from "../../hooks/use-auth";
 import { useFormData } from "../../hooks/use-form-data";
 import { ValidationError } from "../../shared/FormControl";
-import AuthButton from "../../components/AuthButton";
+import AuthButton from "../../shared/AuthButton";
 import RememberMe from "./RememberMe";
 import ForgotPassword from "./ForgotPassword";
 

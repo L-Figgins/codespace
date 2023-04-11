@@ -5,13 +5,14 @@ import FormControlContext from "./form-control-context";
 export default function FormControl({
   children,
   onChange,
-  onBlur,
+  handleBlur,
   error,
   name,
   ...props
 }) {
   const contextValue = {
     name,
+    handleBlur,
     onChange,
     error,
     ...props,
