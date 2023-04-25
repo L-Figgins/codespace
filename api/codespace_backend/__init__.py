@@ -5,6 +5,7 @@ from flask import Flask
 
 from .auth import auth
 from .articles import articles
+from .users import user
 
 
 def create_app(test_config=None):
@@ -12,6 +13,7 @@ def create_app(test_config=None):
    
     app = Flask(__name__, instance_relative_config=True)
     app.register_blueprint(auth)
+    app.register_blueprint(user)
     app.register_blueprint(articles)
     app.config.from_object('codespace_backend.config.Config')
 

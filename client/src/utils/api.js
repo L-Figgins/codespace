@@ -44,8 +44,8 @@ const ROUTES = {
  * Method GET admin user if they exist
  * @return {Promise<User | null>} Admin user or null if before configuration
  */
-export const fetchAdminUser = async () => {
-  throw new NotImplementedError();
+export const fetchUser = async () => {
+  return http.get("/user");
 };
 
 /**
@@ -95,7 +95,7 @@ export const login = (credentials) => {
 };
 
 export const logout = () => {
-  throw new NotImplementedError();
+  return http.get("/auth/logout");
 };
 
 /**

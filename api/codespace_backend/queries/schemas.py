@@ -53,18 +53,18 @@ class UserSchema(Schema):
     linked_in = fields.URL(required=False)
     #TODO validate its a valid phone number
     phone = fields.Str(required=False)
-    linked_in = fields.URL(required=False)
 
     @pre_load
     def prepare_for_redis(self, data, **kwargs):
         try:
+            translations = [("email","email"), ("github","github"), ("phone","phone"), ("linkedIn","linked_in")]
             contact_info = data.pop("contactInfo")
-            data = {**data, **contact_info}
-            # data["image_url"] = contact_info.get("imageURL", "")
-            # data["email"] = contact_info.get("email")
-            # data["github"] = contact_info.get("github", "")
-            # data["phone"] = contact_info.get("phone", "")
-            # data["linked_in"] = contact_info.get("linkedIn", "")
+
+            for tup in translations:
+                val =contact_info.get(tup[0])
+                if val:
+                    data[tup[1]] = val
+    
             return data
         except KeyError as e:
             raise ValidationError(str(e))

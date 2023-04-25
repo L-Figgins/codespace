@@ -63,8 +63,8 @@ def register_admin_user():
     try:
         user_id = create_user(payload)
         # auth.logger.info(f"user_payload created with id:{user_id}")
-    except ValidationError:
-        abort(400, description="Validation Error")
+    except ValidationError as e:
+        abort(400, description=str(e))
         
 
     return {"payload": user_id}, 200
@@ -82,20 +82,21 @@ def login():
             description="Malformed request body. The payload must contain a username and password",
         )
     try:
-        user = get_user_by_username(username, only={"id","password"}, exclude=())
+        user = get_user_by_username(username, exclude=())
         is_valid = check_password_hash(user["password"], password)
     except KeyError:
-        abort(403, "incorrect user")
+        abort(400, description="Incorrect user")
     except ValueError:
-        abort(400, "username taken")
+        abort(400, description="Username taken")
 
     if not is_valid:
-        abort(401, description="incorrect username or password")
+        abort(400, description="Incorrect Username or Password")
 
     session.clear()
     session["user_id"] = user["id"]
+    user.pop("password")
 
-    return {"payload": "success"}, 200
+    return {"payload": user}, 200
 
 
 @auth.route("/logout")
